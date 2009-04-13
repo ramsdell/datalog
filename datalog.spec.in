@@ -1,0 +1,77 @@
+Name:		@PACKAGE@
+Version:	@VERSION@
+Release:	1
+Source:		%{name}-%{version}.tar.gz
+Vendor:		The MITRE Corporation
+
+URL:		http://www.mitre.org/
+Packager:	The MITRE Corporation
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+
+Summary:	A Lightweight Deductive Database using Datalog
+License:	LGPL
+Group:		Applications/Databases
+
+PreReq:		/sbin/install-info
+
+%description
+
+This package contains a lightweight deductive database system.
+Queries and database updates are expressed using Datalog--a
+declarative logic language in which each formula is a function-free
+Horn clause, and every variable in the head of a clause must appear in
+the body of the clause.  The use of Datalog syntax and an
+implementation based on tabling intermediate results, ensures that all
+queries terminate.
+
+The components in this package are designed to be small, and usable on
+memory constrained devices.  The package includes an interactive
+interpreter for Datalog, and the developments package has a library
+that can be used to embed the interpreter into C programs.
+
+%package devel 
+Summary: Datalog header file and library.
+License: LGPL
+Group: Development/Libraries
+
+%description devel
+This package includes the header file and static library
+that can be used to embed a datalog interpreter into C programs.
+
+%prep
+%setup -q
+
+%build
+%configure
+make
+
+%install
+rm -rf %{buildroot}
+%makeinstall
+
+%clean
+rm -rf %{buildroot}
+
+%post
+if [ -f %{_infodir}/%{name}.info.gz ]; then
+  /sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir
+fi
+
+%postun
+if [ $1 -eq 0 ]; then
+  if [ -f %{_infodir}/%{name}.info.gz ]; then
+    /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir
+  fi
+fi
+
+%files
+%defattr (-, root, root)
+%doc %{name}.html ChangeLog README
+%{_bindir}/%{name}
+%{_infodir}/*
+%{_datadir}/%{name}/*
+
+%files devel
+%defattr (-, root, root)
+%{_includedir}/%{name}.h
+%{_libdir}/lib%{name}.a
