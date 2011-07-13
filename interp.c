@@ -177,7 +177,7 @@ typedef struct {
 } linebuffer_t;
 
 static const char *
-getline(void *data, size_t *size)
+getaline(void *data, size_t *size)
 {
   linebuffer_t *lb = (linebuffer_t *)data;
   char *buf = lb->buffer;
@@ -252,7 +252,7 @@ interp(dl_db_t db)
     printf("%s %s\n\n", package, version);
   do {
     lb.again = lb.done = 0;
-    rc = dl_load(db, getline, lineerror, &lb); /* Read. */
+    rc = dl_load(db, getaline, lineerror, &lb); /* Read. */
     if (!rc) {
       rc = dl_ask(db, &a);	/* Eval. */
       if (!rc) {

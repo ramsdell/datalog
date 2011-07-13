@@ -1,3 +1,25 @@
+2011-07-05  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* CVS: Tagged as datalog-1_6.
+
+	* lua/*: Applied patch http://www.lua.org/ftp/patch-lua-5.1.4-3.
+
+	* datalog.spec.in:  Added changelog and SMP make flags.
+
+2011-07-01  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* loader.c (addstr): Corrected the computation of the mark for a
+	quoted constant that spans multiple buffers.  When reading a
+	quoted string that spans multiple buffers, bytes were lost.  This
+	fixes a reader bug reported by Georges Louis.
+
+2010-05-27  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* CVS: Tagged as datalog-1_5.
+
+	* interp.c (getaline): Rename function from getline to avoid
+	conflict with the one in <stdio.h>.
+
 2009-03-30  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* CVS: Tagged as datalog-1_4.

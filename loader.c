@@ -442,11 +442,11 @@ addstr(loader_t *l)		/* Add a quoted string. */
       more = 1;
 
     ch = getch(l);		/* Force a buffer read. */
-    mark = l->position;
     if (ch == '"')
       return ID;
     else
       ungetch(l, ch);
+    mark = l->position - 1;
   }
 }
 

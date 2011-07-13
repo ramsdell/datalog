@@ -1,6 +1,6 @@
 Name:		@PACKAGE@
 Version:	@VERSION@
-Release:	1
+Release:	1%{?dist}
 Source:		%{name}-%{version}.tar.gz
 Vendor:		The MITRE Corporation
 
@@ -11,8 +11,6 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Summary:	A Lightweight Deductive Database using Datalog
 License:	LGPL
 Group:		Applications/Databases
-
-PreReq:		/sbin/install-info
 
 %description
 
@@ -43,11 +41,11 @@ that can be used to embed a datalog interpreter into C programs.
 
 %build
 %configure
-make
+make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
-%makeinstall
+make DESTDIR=%{buildroot} install
 
 %clean
 rm -rf %{buildroot}
@@ -75,3 +73,13 @@ fi
 %defattr (-, root, root)
 %{_includedir}/%{name}.h
 %{_libdir}/lib%{name}.a
+
+%changelog
+
+* Tue Jul 7 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.6-1
+- lua/*: Applied patch http://www.lua.org/ftp/patch-lua-5.1.4-3.
+
+* Fri Jul 1 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.6-1
+- loader.c (addstr): Corrected the computation of the mark for a
+  quoted constant that spans multiple buffers.  This fixes a bug
+  reported by Georges Louis.
