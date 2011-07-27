@@ -1,7 +1,9 @@
 Name:		@PACKAGE@
 Version:	@VERSION@
 Release:	1%{?dist}
-Source0:	http://www.ccs.neu.edu/home/ramsdell/tools/%{name}-%{version}.tar.gz
+
+Source0:	http://downloads.sf.net/datalog/%{name}-%{version}.tar.gz
+
 Vendor:		The MITRE Corporation
 
 URL:		http://sf.net/projects/datalog
