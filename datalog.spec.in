@@ -4,14 +4,12 @@ Release:	1%{?dist}
 
 Source0:	http://downloads.sf.net/datalog/%{name}-%{version}.tar.gz
 
-Vendor:		The MITRE Corporation
-
 URL:		http://sf.net/projects/datalog
 Packager:	The MITRE Corporation
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 
 Summary:	A Lightweight Deductive Database using Datalog
-License:	LGPL
+License:	LGPLv2+
 Group:		Applications/Databases
 
 %description
@@ -31,7 +29,7 @@ that can be used to embed the interpreter into C programs.
 
 %package devel 
 Summary: Datalog header file and library.
-License: LGPL
+License: LGPLv2+
 Group: Development/Libraries
 
 %description devel
@@ -65,23 +63,28 @@ if [ $1 -eq 0 ]; then
 fi
 
 %files
-%defattr (-, root, root)
-%doc %{name}.html ChangeLog README
+%defattr (-, root, root, -)
+%doc %{name}.html ChangeLog README COPYING.LIB
 %{_bindir}/%{name}
-%{_infodir}/*
-%{_datadir}/%{name}/*
+%{_infodir}/%{name}.info
+%{_datadir}/%{name}
+%{_datadir}/%{name}/%{name}.lua
+%{_datadir}/%{name}/%{name}.html
 
 %files devel
-%defattr (-, root, root)
+%defattr (-, root, root, -)
 %{_includedir}/%{name}.h
 %{_libdir}/lib%{name}.a
 
 %changelog
 
-* Tue Jul 7 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.6-1
-- lua/*: Applied patch http://www.lua.org/ftp/patch-lua-5.1.4-3.
+* Sat Aug 6 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.7-1
+- Fixed license name by adding version number
+- Dropped vendor field
+- Switched to standard name for build root
+- %%defaddrs now contain four fields
+- Removed asterisks in %%files
+- Added COPYING.LIB
 
-* Fri Jul 1 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.6-1
-- loader.c (addstr): Corrected the computation of the mark for a
-  quoted constant that spans multiple buffers.  This fixes a bug
-  reported by Georges Louis.
+* Tue Jul 7 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.6-1
+- Initial spec release
