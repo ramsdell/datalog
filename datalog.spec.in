@@ -1,6 +1,6 @@
 Name:		@PACKAGE@
 Version:	@VERSION@
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 Source0:	http://downloads.sf.net/datalog/%{name}-%{version}.tar.gz
 
@@ -71,14 +71,12 @@ fi
 %{_datadir}/%{name}/%{name}.lua
 %{_datadir}/%{name}/%{name}.html
 
-%files devel
-%defattr (-, root, root, -)
-%{_includedir}/%{name}.h
-%{_libdir}/lib%{name}.a
-
 %changelog
 
-* Sat Aug 6 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.7-1
+* Tue Sep 20 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.6-2
+- Removed devel package
+
+* Sat Aug 6 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.6-1
 - Fixed license name by adding version number
 - Dropped vendor field
 - Switched to standard name for build root
@@ -86,5 +84,5 @@ fi
 - Removed asterisks in %%files
 - Added COPYING.LIB
 
-* Tue Jul 7 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.6-1
+* Tue Jul 7 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.4-1
 - Initial spec release
