@@ -24,17 +24,8 @@ queries terminate.
 
 The components in this package are designed to be small, and usable on
 memory constrained devices.  The package includes an interactive
-interpreter for Datalog, and the developments package has a library
-that can be used to embed the interpreter into C programs.
-
-%package devel 
-Summary: Datalog header file and library.
-License: LGPLv2+
-Group: Development/Libraries
-
-%description devel
-This package includes the header file and static library
-that can be used to embed a datalog interpreter into C programs.
+interpreter for Datalog.  A library that can be used to embed the
+interpreter into C programs is available in the source distribution.
 
 %prep
 %setup -q
