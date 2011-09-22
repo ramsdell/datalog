@@ -12,6 +12,8 @@ Summary:	A Lightweight Deductive Database using Datalog
 License:	LGPLv2+
 Group:		Applications/Databases
 
+BuildRequires:	texinfo
+
 %description
 
 This package contains a lightweight deductive database system.
