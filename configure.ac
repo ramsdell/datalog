@@ -15,7 +15,7 @@ AC_PROG_RANLIB
 
 AC_ARG_WITH([lua],
   [AS_HELP_STRING([--with-lua],
-    [use installed lua package])],
+    [use installed lua package (default no)])],
   [],
   [with_lua=no])
 
