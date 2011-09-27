@@ -25,9 +25,9 @@ USA
 
 ]]
 
--- This file exports it contents for Lua users in package datalog.
+-- This file exports its contents for Lua users in package datalog.
 -- The package is created at the end of the file.  All definitions
--- before the exports are declared should be local definitions.
+-- before the exports should be local definitions.
 
 -- DATA TYPES
 
