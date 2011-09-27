@@ -14,7 +14,7 @@ endif
 libdatalog_a_SOURCES = datalog.h loader.c datalog.c
 
 datalog_SOURCES = interp.c
-datalog_LDADD = libdatalog.a $(LOCAL_LIBLUA) -lm
+datalog_LDADD = libdatalog.a $(LOCAL_LIBLUA)
 datalog_DEPENDENCIES = libdatalog.a $(LOCAL_LIBLUA)
 
 BUILT_SOURCES = dl_lua.h

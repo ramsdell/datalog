@@ -13,6 +13,8 @@ fi
 
 AC_PROG_RANLIB
 
+AC_SEARCH_LIBS([exp], [m])
+
 AC_ARG_WITH([lua],
   [AS_HELP_STRING([--with-lua],
     [use installed lua package (default no)])],
@@ -21,9 +23,9 @@ AC_ARG_WITH([lua],
 
 # Look for correct version of Lua
 if test x$with_lua != xno ; then
-  AX_LUA_HEADERS
+  AC_CHECK_HEADERS([lua.h lualib.h])
   AX_LUA_HEADERS_VERSION(501, 502)
-  AX_LUA_LIB
+  AC_SEARCH_LIBS([lua_pcall], [lua$with_lua_suffix])
 fi
 
 AM_CONDITIONAL([NO_LUA], [test x$with_lua = xno])
