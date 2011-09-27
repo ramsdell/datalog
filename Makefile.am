@@ -1,4 +1,3 @@
-SUBDIRS = lua
 bin_PROGRAMS = datalog
 lib_LIBRARIES = libdatalog.a
 include_HEADERS = datalog.h
@@ -6,13 +5,17 @@ info_TEXINFOS = datalog.texi
 pkgdata_DATA = datalog.lua datalog.html
 noinst_PROGRAMS = bin2c
 
-AM_CPPFLAGS = -I$(srcdir)/lua
+if NO_LUA
+  SUBDIRS = lua
+  AM_CPPFLAGS = -I$(srcdir)/lua
+  LOCAL_LIBLUA = lua/liblua.a
+endif
 
 libdatalog_a_SOURCES = datalog.h loader.c datalog.c
 
 datalog_SOURCES = interp.c
-datalog_LDADD = libdatalog.a lua/liblua.a -lm
-datalog_DEPENDENCIES = libdatalog.a lua/liblua.a
+datalog_LDADD = libdatalog.a $(LOCAL_LIBLUA) -lm
+datalog_DEPENDENCIES = libdatalog.a $(LOCAL_LIBLUA)
 
 BUILT_SOURCES = dl_lua.h
 

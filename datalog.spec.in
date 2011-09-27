@@ -12,7 +12,7 @@ Summary:	A Lightweight Deductive Database using Datalog
 License:	LGPLv2+
 Group:		Applications/Databases
 
-BuildRequires:	texinfo
+BuildRequires:	texinfo, lua-devel == 5.1
 
 %description
 
@@ -33,7 +33,7 @@ interpreter into C programs is available in the source distribution.
 %setup -q
 
 %build
-%configure
+%configure --with-lua
 make %{?_smp_mflags}
 
 %install
