@@ -1,6 +1,6 @@
 Name:		@PACKAGE@
 Version:	@VERSION@
-Release:	3%{?dist}
+Release:	1%{?dist}
 
 Source0:	http://downloads.sf.net/datalog/%{name}-%{version}.tar.gz
 
