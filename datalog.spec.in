@@ -41,12 +41,12 @@ make %{?_smp_mflags}
 %install
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
-/bin/mkdir -p %{buildroot}%{luapkgdir}
-/usr/bin/install %{name}.lua %{buildroot}%{luapkgdir}
-/bin/rm -rf %{buildroot}/%{_includedir}
-/bin/rm -rf %{buildroot}/%{_libdir}
-/bin/rm -rf %{buildroot}/%{_datadir}/%{name}
-/bin/rm -rf %{buildroot}/%{_infodir}/dir
+mkdir -p %{buildroot}%{luapkgdir}
+install %{name}.lua %{buildroot}%{luapkgdir}
+rm -rf %{buildroot}/%{_includedir}
+rm -rf %{buildroot}/%{_libdir}
+rm -rf %{buildroot}/%{_datadir}/%{name}
+rm -rf %{buildroot}/%{_infodir}/dir
 
 %clean
 rm -rf %{buildroot}
