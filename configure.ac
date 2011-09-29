@@ -22,13 +22,15 @@ AC_ARG_WITH([lua],
   [with_lua=no])
 
 # Look for correct version of Lua
-if test x$with_lua != xno ; then
-  AC_CHECK_HEADERS([lua.h lualib.h])
-  AX_LUA_HEADERS_VERSION(501, 502)
-  AC_SEARCH_LIBS([lua_pcall], [lua$with_lua_suffix])
+if test "x$with_lua" != xno -o -n "$with_lua_suffix" ; then
+  AC_CHECK_HEADERS([lua.h lualib.h],
+                   [], AC_MSG_FAILURE([lua header not found]))
+  AX_LUA_HEADERS_VERSION([501], [502])
+  AC_SEARCH_LIBS([lua_pcall], [lua$with_lua_suffix],
+                 [], AC_MSG_FAILURE([lua library not found]))
 fi
 
-AM_CONDITIONAL([NO_LUA], [test x$with_lua = xno])
+AM_CONDITIONAL([NO_LUA], [test "x$with_lua" = xno -o -n "$with_lua_suffix"])
 
 AC_CONFIG_FILES([Makefile lua/Makefile datalog.spec datalog.lua])
 
