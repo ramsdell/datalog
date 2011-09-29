@@ -51,11 +51,13 @@ rm -rf %{buildroot}/%{_infodir}/dir
 rm -rf %{buildroot}
 
 %post
+/sbin/ldconfig
 if [ -f %{_infodir}/%{name}.info.gz ]; then
   /sbin/install-info %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
 fi
 
 %postun
+/sbin/ldconfig
 if [ $1 -eq 0 ]; then
   if [ -f %{_infodir}/%{name}.info.gz ]; then
     /sbin/install-info --delete %{_infodir}/%{name}.info.gz %{_infodir}/dir || :
