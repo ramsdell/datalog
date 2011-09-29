@@ -1,3 +1,8 @@
+2011-09-29  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* Makefile.am (lib_LTLIBRARIES): Added support for shared
+	libraries via libtool.
+
 2011-09-27  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* configure.ac, Makefile.am, datalog.spec.in: Add --with-lua

@@ -11,17 +11,17 @@ if test "X$GCC" = Xyes ; then
   CFLAGS="$CFLAGS -Wall"
 fi
 
-AC_PROG_RANLIB
+LT_INIT([disable-shared])
 
 AC_SEARCH_LIBS([exp], [m])
 
 AC_ARG_WITH([lua],
   [AS_HELP_STRING([--with-lua],
-    [use installed lua package (default no)])],
+    [use installed lua package [default=no]])],
   [],
   [with_lua=no])
 
-# Look for correct version of Lua
+# Look for correct version of installed Lua
 if test "x$with_lua" != xno -o -n "$with_lua_suffix" ; then
   AC_CHECK_HEADERS([lua.h lualib.h],
                    [], AC_MSG_FAILURE([lua header not found]))
