@@ -1,7 +1,11 @@
+2011-09-30  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* CVS: Tagged as datalog-1_7.
+
 2011-09-29  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* Makefile.am (lib_LTLIBRARIES): Added support for shared
-	libraries via libtool.
+	libraries via libtool.  The default is static libraries.
 
 2011-09-27  John D. Ramsdell  <ramsdell@mitre.org>
 

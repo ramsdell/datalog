@@ -14,3 +14,10 @@ The components in this package are designed to be small, and usable on
 memory constrained devices.  The package includes an interactive
 interpreter for Datalog, and a library that can be used to embed the
 interpreter into C programs.
+
+INSTALLATION
+
+If you have Lua 5.1 installed, configure with the --with-lua option.
+On Debian-based systems, use:
+
+    $ ./configure --with-lua-suffix=5.1 CPPFLAGS=-I/usr/include/lua5.1
