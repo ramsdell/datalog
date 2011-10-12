@@ -1,11 +1,12 @@
+%define	luapkgdir %{_datadir}/lua/5.1
+
 Name:		@PACKAGE@
 Version:	@VERSION@
-Release:	1%{?dist}
+Release:	2%{?dist}
 
-Source0:	http://downloads.sf.net/datalog/%{name}-%{version}.tar.gz
+Source0:	http://downloads.sourceforge.net/datalog/%{name}-%{version}.tar.gz
 
-URL:		http://sf.net/projects/datalog
-Packager:	The MITRE Corporation
+URL:		http://sourceforge.net/projects/datalog
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 
 Summary:	A Lightweight Deductive Database using Datalog
@@ -14,10 +15,7 @@ Group:		Applications/Databases
 
 BuildRequires:	texinfo, lua-devel == 5.1.4
 
-%define	luapkgdir %{_datadir}/lua/5.1
-
 %description
-
 This package contains a lightweight deductive database system.
 Queries and database updates are expressed using Datalog--a
 declarative logic language in which each formula is a function-free
@@ -28,8 +26,17 @@ queries terminate.
 
 The components in this package are designed to be small, and usable on
 memory constrained devices.  The package includes an interactive
-interpreter for Datalog.  A library that can be used to embed the
-interpreter into C programs is available in the source distribution.
+interpreter for Datalog, and the development package has a library
+that can be used to embed the interpreter into C programs.
+
+%package devel 
+Summary: Datalog header file and library.
+License: LGPL
+Group: Development/Libraries
+
+%description devel 
+This package includes the header file and library that can be used to
+embed a datalog interpreter into C programs.
 
 %prep
 %setup -q
@@ -68,12 +75,23 @@ fi
 %defattr (-, root, root, -)
 %doc %{name}.html ChangeLog README COPYING.LIB
 %{_bindir}/%{name}
-%{_libdir}/lib%{name}.so*
+%{_libdir}/lib%{name}.so.*
 %{_infodir}/%{name}.info.gz
 %{luapkgdir}/%{name}.lua
+
+%files devel
+%defattr (-, root, root, -)
 %{_includedir}/%{name}.h
+%{_libdir}/lib%{name}.so
 
 %changelog
+* Wed Oct 12 2011 John D. Ramsdell <ramsdell@couch.mitre.org> - 1.7-2
+- Added devel package
+- Moved luapkgdir def to top of file
+- sf.net --> sourceforge.net
+- Removed Packager field
+- Removed newline between %%description and text
+
 * Thu Sep 29 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.7-1
 - Use installed Lua package and shared libraries
 
