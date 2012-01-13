@@ -2,7 +2,7 @@
 
 Name:		@PACKAGE@
 Version:	@VERSION@
-Release:	2%{?dist}
+Release:	3%{?dist}
 
 Source0:	http://downloads.sourceforge.net/datalog/%{name}-%{version}.tar.gz
 
@@ -30,8 +30,8 @@ interpreter for Datalog, and the development package has a library
 that can be used to embed the interpreter into C programs.
 
 %package devel 
-Summary: Datalog header file and library.
-License: LGPL
+Summary: Datalog header file and library
+License: LGPLv2+
 Group: Development/Libraries
 
 %description devel 
@@ -49,7 +49,7 @@ make %{?_smp_mflags}
 rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
 mkdir -p %{buildroot}%{luapkgdir}
-install %{name}.lua %{buildroot}%{luapkgdir}
+install -m 644 %{name}.lua %{buildroot}%{luapkgdir}
 rm -rf %{buildroot}/%{_libdir}/lib%{name}.la
 rm -rf %{buildroot}/%{_datadir}/%{name}
 rm -rf %{buildroot}/%{_infodir}/dir
@@ -85,7 +85,11 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
-* Wed Oct 12 2011 John D. Ramsdell <ramsdell@couch.mitre.org> - 1.7-2
+* Fri Jan 13 2012 John D. Ramsdell <ramsdell@mitre.org> - 1.7-3
+- Fix devel license and summary
+- chmod 644 on installed datalog.lua
+
+* Wed Oct 12 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.7-2
 - Added devel package
 - Moved luapkgdir def to top of file
 - sf.net --> sourceforge.net
