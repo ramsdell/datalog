@@ -33,6 +33,7 @@ that can be used to embed the interpreter into C programs.
 Summary: Datalog header file and library
 License: LGPLv2+
 Group: Development/Libraries
+Requires: libdatalog = %{version}
 
 %description devel 
 This package includes the header file and library that can be used to
