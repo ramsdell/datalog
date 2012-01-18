@@ -2,7 +2,7 @@
 
 Name:		@PACKAGE@
 Version:	@VERSION@
-Release:	3%{?dist}
+Release:	1%{?dist}
 
 Source0:	http://downloads.sourceforge.net/datalog/%{name}-%{version}.tar.gz
 
@@ -78,6 +78,7 @@ fi
 %{_bindir}/%{name}
 %{_libdir}/lib%{name}.so.*
 %{_infodir}/%{name}.info.gz
+%{_mandir}/man1/%{name}.1
 %{luapkgdir}/%{name}.lua
 
 %files devel

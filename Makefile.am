@@ -3,6 +3,7 @@ lib_LTLIBRARIES = libdatalog.la
 include_HEADERS = datalog.h
 info_TEXINFOS = datalog.texi
 pkgdata_DATA = datalog.lua datalog.html
+dist_man_MANS = datalog.1
 noinst_PROGRAMS = bin2c
 
 if NO_LUA

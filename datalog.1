@@ -1,0 +1,34 @@
+.TH "DATALOG" 1 "Jan 2012" "" ""
+.SH NAME
+datalog
+.SH SYNOPSIS
+.B datalog
+.RB [ \-o\ OUT-FILE ]
+.RB [ \-ihv ]
+.RI [ IN-FILE ]
+.br
+.SH DESCRIPTION
+.PP
+The 
+.B datalog
+program provides a lightweight deductive database system.  Queries and
+database updates are expressed using Datalog--a declarative logic
+language in which each formula is a function-free Horn clause, and
+every variable in the head of a clause must appear in the body of the
+clause.  The use of Datalog syntax and an implementation based on
+tabling intermediate results, ensures that all queries terminate.  The
+program reads and executes the assertions and queries in
+.RI IN-FILE,
+or enters interactive mode if an input file is not given.
+.TP
+.RB \-o\ OUT-FILE
+Send output to a file (default is standard output).
+.TP
+.RB \-i
+Enter interactive mode after loading input file.
+.TP
+.RB \-h
+Display command usage info.
+.TP
+.RB \-v
+Display command version info.
