@@ -78,7 +78,7 @@ fi
 %{_bindir}/%{name}
 %{_libdir}/lib%{name}.so.*
 %{_infodir}/%{name}.info.gz
-%{_mandir}/man1/%{name}.1
+%{_mandir}/man1/*
 %{luapkgdir}/%{name}.lua
 
 %files devel
@@ -87,6 +87,9 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
+* Wed Jan 18 2012 John D. Ramsdell <ramsdell@mitre.org> - 1.8-1
+- Added a manual page
+
 * Fri Jan 13 2012 John D. Ramsdell <ramsdell@mitre.org> - 1.7-3
 - Fix devel license and summary
 - chmod 644 on installed datalog.lua
