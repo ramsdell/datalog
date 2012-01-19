@@ -43,7 +43,7 @@ const char version[] = "version unknown";
 static void
 print_version(const char *program)
 {
-  if (package)
+  if (package != NULL)
     program = package;
   fprintf(stderr, "%s %s\n", program, version);
 }
@@ -248,7 +248,7 @@ interp(dl_db_t db)
   int rc;
   linebuffer_t lb;
   lb.db = db;
-  if (package)			/* Show welcome message. */
+  if (package != NULL)		/* Show welcome message. */
     printf("%s %s\n\n", package, version);
   do {
     lb.again = lb.done = 0;

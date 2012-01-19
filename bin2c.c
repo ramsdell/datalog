@@ -65,7 +65,7 @@ static const char version[] = "version unknown";
 static void
 print_version(const char *program)
 {
-  if (package)
+  if (package != NULL)
     program = package;
   fprintf(stderr, "%s %s\n", program, version);
 }

@@ -1,6 +1,14 @@
 2012-01-19  John D. Ramsdell  <ramsdell@mitre.org>
 
-	* configure.ac: Corrected the NO_LUA test.
+	* interp.c (interp, print_version): Remove compiler warnings about
+	testing against a constant address.
+
+	* bin2c.c (print_version): Remove compiler warnings about testing
+	against a constant address.
+
+	* configure.ac: Corrected the NO_LUA test.  Added check for
+	lauxlib.h.  Changed lua function used in lua library check from
+	lua_pcall to lua_pushboolean, as lua_pcall is a macro in Lua 5.2.
 
 2012-01-18  John D. Ramsdell  <ramsdell@mitre.org>
 
