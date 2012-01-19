@@ -1,3 +1,7 @@
+2012-01-19  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* configure.ac: Corrected the NO_LUA test.
+
 2012-01-18  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* datalog.lua.in, COPYING.LIB: Fixed the address of the Free
@@ -148,7 +152,7 @@
 2005-08-10  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* datalog.lua.in: Added the ability to save and restore
-	databases. 
+	databases.
 
 2005-05-23  John D. Ramsdell  <ramsdell@mitre.org>
 

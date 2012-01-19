@@ -22,6 +22,7 @@ AC_ARG_WITH([lua],
   [with_lua=no])
 
 # Look for correct version of installed Lua
+# when --with-lua is not no or --with-lua-suffix is defined.
 if test "x$with_lua" != xno -o -n "$with_lua_suffix" ; then
   AC_CHECK_HEADERS([lua.h lualib.h],
                    [], AC_MSG_FAILURE([lua header not found]))
@@ -30,7 +31,7 @@ if test "x$with_lua" != xno -o -n "$with_lua_suffix" ; then
                  [], AC_MSG_FAILURE([lua library not found]))
 fi
 
-AM_CONDITIONAL([NO_LUA], [test "x$with_lua" = xno -o -n "$with_lua_suffix"])
+AM_CONDITIONAL([NO_LUA], [test "x$with_lua" = xno -a -z "$with_lua_suffix"])
 
 AC_CONFIG_FILES([Makefile lua/Makefile datalog.spec datalog.lua])
 
