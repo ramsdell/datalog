@@ -1,11 +1,10 @@
 .TH "DATALOG" 1 "Jan 2012" "" ""
 .SH NAME
-datalog
+datalog \- a lightweight deductive database system
 .SH SYNOPSIS
 .B datalog
-.RB [ \-o\ OUT-FILE ]
-.RB [ \-ihv ]
-.RI [ IN-FILE ]
+.RB [ OPTIONS ]
+.RI [ FILE ]
 .br
 .SH DESCRIPTION
 .PP
@@ -18,10 +17,11 @@ every variable in the head of a clause must appear in the body of the
 clause.  The use of Datalog syntax and an implementation based on
 tabling intermediate results, ensures that all queries terminate.  The
 program reads and executes the assertions and queries in
-.RI IN-FILE,
+.RI FILE,
 or enters interactive mode if an input file is not given.
+.SH OPTIONS
 .TP
-.RB \-o\ OUT-FILE
+.RB \-o\ FILE
 Send output to a file (default is standard output).
 .TP
 .RB \-i
@@ -32,3 +32,19 @@ Display command usage info.
 .TP
 .RB \-v
 Display command version info.
+.SH EXIT STATUS
+The exit status is non-zero if there is a syntax error in the input
+file or an internal error occurs.
+.SH SEE ALSO
+The full documentation for
+.B datalog
+is maintained as a Texinfo manual.
+If the
+.B info
+and
+.B datalog
+programs are properly installed at your site, the command
+.IP
+.B info datalog
+.PP
+should give you access to the complete manual.
