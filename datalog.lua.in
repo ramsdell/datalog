@@ -154,7 +154,7 @@ end
 -- which must match the predicate's arity.
 
 local function make_literal(pred_name, terms)
-   local arity = table.getn(terms)
+   local arity = #terms
    local pred = make_pred(pred_name, arity)
    local literal = {pred = pred}
    for i=1,arity do
@@ -177,7 +177,7 @@ local function get_id(literal)
    local id = literal.id
    if not id then
       id = add_size(literal.pred.id)
-      for i=1,table.getn(literal) do
+      for i=1,#literal do
 	 id = id .. add_size(literal[i]:get_id())
       end
       literal.id = id
@@ -206,7 +206,7 @@ local function get_tag(literal)
    if not tag then
       local env = {}
       tag = add_size(literal.pred.id)
-      for i=1,table.getn(literal) do
+      for i=1,#literal do
 	 tag = tag .. add_size(literal[i]:get_tag(i, env))
       end
       literal.tag = tag
@@ -235,7 +235,7 @@ local function subst(literal, env)
    if not next(env) then	-- Found an empty map.
       return literal
    end
-   local arity = table.getn(literal)
+   local arity = #literal
    local new = {pred = literal.pred}
    for i=1,arity do
       new[i] = literal[i]:subst(env)
@@ -261,7 +261,7 @@ end
 
 local function shuffle(literal, env)
    local map = env or {}
-   for i=1,table.getn(literal) do
+   for i=1,#literal do
       literal[i]:shuffle(map)
    end
    return map
@@ -292,7 +292,7 @@ local function unify(literal, other)
       return nil
    else
       local env = {}
-      for i=1,table.getn(literal) do
+      for i=1,#literal do
 	 local literal_i = literal[i]:chase(env)
 	 local other_i = other[i]:chase(env)
 	 if literal_i ~= other_i then
@@ -354,7 +354,7 @@ end
 -- efficient implementation of this operation.
 
 local function is_in(term, literal)
-   for i=1,table.getn(literal) do
+   for i=1,#literal do
       if literal[i] == term then
 	 return true
       end
@@ -384,7 +384,7 @@ end
 
 local function make_clause(head, body)
    local clause = {head = head}
-   for i=1,table.getn(body) do
+   for i=1,#body do
       clause[i] = body[i]
    end
    return clause
@@ -400,7 +400,7 @@ local function get_clause_id(clause)
    local id = clause.id
    if not id then
       id = add_size(get_id(clause.head))
-      for i=1,table.getn(clause) do
+      for i=1,#clause do
 	 id = id .. add_size(get_id(clause[i]))
       end
       clause.id = id
@@ -416,7 +416,7 @@ local function subst_in_clause(clause, env)
       return clause
    end
    local new = {head = subst(clause.head, env)}
-   for i=1,table.getn(clause) do
+   for i=1,#clause do
       new[i] = subst(clause[i], env)
    end
    return new
@@ -428,7 +428,7 @@ end
 
 local function rename_clause(clause)
    local env = {}
-   for i=1,table.getn(clause) do
+   for i=1,#clause do
       env = shuffle(clause[i], env)
    end
    if not next(env) then
@@ -441,7 +441,7 @@ end
 -- A clause is safe if every variable in its head is in its body.
 
 local function is_safe(clause)
-   for i=1,table.getn(clause.head) do
+   for i=1,#clause.head do
       if not clause.head[i]:is_safe(clause) then
 	 return false
       end
@@ -454,7 +454,7 @@ function Const:is_safe(clause)
 end
 
 function Var:is_safe(clause)
-   for i=1,table.getn(clause) do
+   for i=1,#clause do
       if is_in(self, clause[i]) then
 	 return true
       end
@@ -587,7 +587,7 @@ end
 -- one less literal.
 
 local function resolve(clause, literal)
-   local n = table.getn(clause)
+   local n = #clause
    if n == 0 then
       return nil
    end
@@ -610,7 +610,7 @@ local fact, rule, add_clause, search
 function fact(subgoal, literal)
    if not is_member(literal, subgoal.facts) then
       adjoin(literal, subgoal.facts)
-      for i=1,table.getn(subgoal.waiters) do
+      for i=1,#subgoal.waiters do
 	 local waiter = subgoal.waiters[i]
 	 local resolvent = resolve(waiter.clause, literal)
 	 if resolvent then
@@ -633,7 +633,7 @@ function rule(subgoal, clause, selected)
 	    table.insert(todo, resolvent)
 	 end
       end
-      for i=1,table.getn(todo) do
+      for i=1,#todo do
 	 add_clause(subgoal, todo[i])
       end
    else
@@ -645,7 +645,7 @@ function rule(subgoal, clause, selected)
 end
 
 function add_clause(subgoal, clause)
-   if table.getn(clause) == 0 then
+   if #clause == 0 then
       return fact(subgoal, clause.head)
    else
       return rule(subgoal, clause, clause[1])
@@ -683,12 +683,12 @@ local function ask(literal)
    local answers = {}
    for id,literal in pairs(subgoal.facts) do
       local answer = {}
-      for i=1,table.getn(literal) do -- Each term in an answer will be
+      for i=1,#literal do -- Each term in an answer will be
 	 table.insert(answer, literal[i].id) -- a constant.
       end
       table.insert(answers, answer)
    end
-   if table.getn(answers) > 0 then
+   if #answers > 0 then
       answers.name = get_name(literal.pred)
       answers.arity = get_arity(literal.pred)
       return answers
@@ -760,7 +760,7 @@ end
 
 local function match(literal, fact)
    local env = {}
-   for i=1,table.getn(literal) do
+   for i=1,#literal do
       if literal[i] ~= fact[i] then
 	 env = literal[i]:match(fact[i], env)
 	 if not env then
@@ -797,7 +797,7 @@ local function add_iter_prim(name, arity, iter)
    local pred = make_pred(name, arity)
    local function prim(literal, subgoal)
       for terms in iter(literal) do
-	 local n = table.getn(terms)
+	 local n = #terms
 	 if n == arity then
 	    local new = {pred = pred}
 	    for i=1,n do
@@ -854,7 +854,7 @@ function dl_addconst(tbl, str)
 end
 
 function dl_makeliteral(tbl)
-   tbl.pred = make_pred(tbl.name, table.getn(tbl))
+   tbl.pred = make_pred(tbl.name, #tbl)
    tbl.name = nil
    return tbl
 end
@@ -888,7 +888,7 @@ function dl_ask(literal)
    if not answers then
       return answers
    end
-   local n = table.getn(answers)
+   local n = #answers
    local arity = answers.arity
    local size = string.len(answers.name) + 1
    for i=1,n do
