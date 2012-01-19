@@ -1,5 +1,12 @@
 2012-01-19  John D. Ramsdell  <ramsdell@mitre.org>
 
+	* datalog.c (dl_open): Fix standard library loading for Lua 5.2.
+
+	* datalog.c (dl_ask): Replace use of lua_strlen and lua_tostring
+	with lua_tolstring.
+
+	* datalog.lua.in: Replaced table.getn with #.
+
 	* interp.c (interp, print_version): Remove compiler warnings about
 	testing against a constant address.
 

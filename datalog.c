@@ -82,11 +82,16 @@ DATALOG_API dl_db_t
 dl_open(void)
 {
   lua_State *L = luaL_newstate();
-  const luaL_Reg *lib = lualibs;
-  for (; lib->func; lib++) {	/* Load libraries used by the */
-    lua_pushcfunction(L, lib->func); /* Lua datalog program. */
+  const luaL_Reg *lib = lualibs; /* Load libraries used by the */
+  for (; lib->func; lib++) {	 /* Lua datalog program. */
+#if LUA_VERSION_NUM < 502
+    lua_pushcfunction(L, lib->func);
     lua_pushstring(L, lib->name);
     lua_call(L, 1, 0);
+#else
+    luaL_requiref(L, lib->name, lib->func, 1);
+    lua_pop(L, 1);		/* remove lib */
+#endif
   }
   if (dl_lua(L))		/* Load the Lua program. */
     return NULL;
@@ -330,6 +335,7 @@ dl_ask(dl_db_t L, dl_answers_t *a)
   lua_Integer size;	      /* Size of the character array block. */
   size_t len;		     /* Used to compute lengths of strings. */
   char *s;		   /* Stores the location to insert a char. */
+  const char *ls;	   /* A string from lua. */
   char **p;		 /* Stores the location to insert a char *. */
   dl_answers_t b;
   *a = NULL;
@@ -402,8 +408,9 @@ dl_ask(dl_db_t L, dl_answers_t *a)
     dl_free(b);
     return 1;
   }
-  len = lua_strlen(L, -1) + 1;
-  memcpy(s, lua_tostring(L, -1), len); /* Copy string. */
+  ls = lua_tolstring(L, -1, &len); /* Get string and length. */
+  len++;			   /* Make room for null byte. */
+  memcpy(s, ls, len);		   /* Copy string. */
   s += len;		/* Update s to be the next unused location. */
   *++p = s;    /* Update p to be the next location and set it to s. */
   lua_pop(L, 1);
@@ -423,8 +430,9 @@ dl_ask(dl_db_t L, dl_answers_t *a)
 	dl_free(b);
 	return 1;
       }
-      len = lua_strlen(L, -1) + 1;
-      memcpy(s, lua_tostring(L, -1), len); /* Copy string. */
+      ls = lua_tolstring(L, -1, &len); /* Get string and length. */
+      len++;			       /* Make room for null byte. */
+      memcpy(s, ls, len);	       /* Copy string. */
       s += len;
       *++p = s;
       lua_pop(L, 1);
