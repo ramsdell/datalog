@@ -1,5 +1,7 @@
 2012-01-19  John D. Ramsdell  <ramsdell@mitre.org>
 
+	* git: Tagged as datalog-1_8 with tag v1.8.
+
 	* datalog.c (dl_open): Fix standard library loading for Lua 5.2.
 
 	* datalog.c (dl_ask): Replace use of lua_strlen and lua_tostring
@@ -26,7 +28,7 @@
 
 2011-09-30  John D. Ramsdell  <ramsdell@mitre.org>
 
-	* CVS: Tagged as datalog-1_7.
+	* git: Tagged as datalog-1_7 with tag v1.7.
 
 2011-09-29  John D. Ramsdell  <ramsdell@mitre.org>
 
