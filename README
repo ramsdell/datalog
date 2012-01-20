@@ -21,3 +21,5 @@ If you have Lua 5.1 installed, configure with the --with-lua option.
 On Debian-based systems, use:
 
     $ ./configure --with-lua-suffix=5.1 CPPFLAGS=-I/usr/include/lua5.1
+
+Datalog can be built on top of Lua 5.2 too.
