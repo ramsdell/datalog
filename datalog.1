@@ -3,7 +3,7 @@
 datalog \- a lightweight deductive database system
 .SH SYNOPSIS
 .B datalog
-.RB [ OPTIONS ]
+.RI [ OPTIONS ]
 .RI [ FILE ]
 .br
 .SH DESCRIPTION
@@ -11,30 +11,30 @@ datalog \- a lightweight deductive database system
 The 
 .B datalog
 program provides a lightweight deductive database system.  Queries and
-database updates are expressed using Datalog--a declarative logic
+database updates are expressed using Datalog\-a declarative logic
 language in which each formula is a function-free Horn clause, and
 every variable in the head of a clause must appear in the body of the
 clause.  The use of Datalog syntax and an implementation based on
 tabling intermediate results, ensures that all queries terminate.  The
 program reads and executes the assertions and queries in
-.RI FILE,
+.IR FILE ,
 or enters interactive mode if an input file is not given.
 .SH OPTIONS
 .TP
-.RB \-o\ FILE
+.BI \-o\  FILE
 Send output to a file (default is standard output).
 .TP
-.RB \-i
+.B \-i
 Enter interactive mode after loading input file.
 .TP
-.RB \-h
+.B \-h
 Display command usage info.
 .TP
-.RB \-v
+.B \-v
 Display command version info.
 .SH EXIT STATUS
 The exit status is non-zero if there is a syntax error in the input
-file or an internal error occurs.
+file or an internal error is detected.
 .SH SEE ALSO
 The full documentation for
 .B datalog
