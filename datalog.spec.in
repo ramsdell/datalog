@@ -13,7 +13,7 @@ Summary:	A Lightweight Deductive Database using Datalog
 License:	LGPLv2+
 Group:		Applications/Databases
 
-BuildRequires:	texinfo, lua-devel == 5.1.4
+BuildRequires:	texinfo, lua-devel < 5.2
 
 %description
 This package contains a lightweight deductive database system.
