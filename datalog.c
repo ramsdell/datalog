@@ -72,7 +72,11 @@ dl_lua(dl_db_t L)
 }
 
 static const luaL_Reg lualibs[] = {
+#if LUA_VERSION_NUM < 502
   {"", luaopen_base},
+#else
+  {"_G", luaopen_base},
+#endif
   {LUA_TABLIBNAME, luaopen_table},
   {LUA_STRLIBNAME, luaopen_string},
   {NULL, NULL}
