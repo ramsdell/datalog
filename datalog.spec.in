@@ -1,8 +1,9 @@
-%define	luapkgdir %{_datadir}/lua/5.1
+%{!?luaver: %define luaver %(lua -e "print(string.sub(_VERSION, 5))")}
+%define	luapkgdir %{_datadir}/lua/%{luaver}
 
 Name:		@PACKAGE@
 Version:	@VERSION@
-Release:	1%{?dist}
+Release:	2%{?dist}
 
 Source0:	http://downloads.sourceforge.net/datalog/%{name}-%{version}.tar.gz
 
@@ -13,7 +14,7 @@ Summary:	A Lightweight Deductive Database using Datalog
 License:	LGPLv2+
 Group:		Applications/Databases
 
-BuildRequires:	texinfo, lua-devel == 5.1.4
+BuildRequires:	texinfo, lua-devel < 5.3
 
 %description
 This package contains a lightweight deductive database system.
@@ -87,6 +88,9 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
+* Thu Jan 26 2012 John D. Ramsdell <ramsdell@mitre.org> - 1.8-2
+- Use lua to determine its version number
+
 * Wed Jan 18 2012 John D. Ramsdell <ramsdell@mitre.org> - 1.8-1
 - Added a manual page
 
