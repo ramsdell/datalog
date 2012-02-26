@@ -10,7 +10,9 @@ As of version 1.7, the Datalog configure script adds options so that
 one can make use of the installed Lua system.  See "./configure --help".
 To configure for Debian-based systems, type:
 
-    $ ./configure --with-lua-suffix=5.1 CPPFLAGS=-I/usr/include/lua5.1
+    $ ./configure --with-lua-suffix=5.2 CPPFLAGS=-I/usr/include/lua5.2
 
 As of version 1.8, the Datalog package can built on top of Lua 5.2.
 The version of Lua included in the package is still 5.1.4-3.
+
+As of version 1.9, the Datalog package uses Lua 5.1.5.

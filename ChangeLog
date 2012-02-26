@@ -1,3 +1,7 @@
+2012-02-25  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* lua/*: Updated Lua sources to version 5.1.5.
+
 2012-01-19  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* git: Tagged as datalog-1_8 with tag v1.8.
