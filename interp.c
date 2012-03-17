@@ -225,7 +225,7 @@ getaline(void *data, size_t *size)
   }
   else if (n > 1 && buf[n - 2] == '\\') { /* Line continued. */
     lb->done = 0;		/* Lines that end in back slash */
-   *size = n - 2;		/* are continued. */
+    *size = n - 2;		/* are continued. */
   }
   else {			/* Complete input found, in other */
     lb->done = 1;		/* words, an unescapped newline */

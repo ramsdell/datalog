@@ -54,7 +54,7 @@ static int dl_pcall(dl_db_t L, int nargs, int nresults)
 static int
 dl_lua(dl_db_t L)
 {
-  int i = luaL_loadbuffer(L, (const char*)datalog_lua_bytes,
+  int i = luaL_loadbuffer(L, (const char *)datalog_lua_bytes,
 			  sizeof(datalog_lua_bytes), datalog_lua_source);
   if (i) {
 #if defined DATALOG_DEBUG

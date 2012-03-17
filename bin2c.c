@@ -133,7 +133,7 @@ emit(const char *name)
 }
 
 int
-main(int argc, char* argv[])
+main(int argc, char *argv[])
 {
   extern char *optarg;
   extern int optind;
