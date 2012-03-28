@@ -787,7 +787,7 @@ function Var:match(const, env)
    end
 end
 
--- Add a primitives that is defined by an iterator.  When given a
+-- Add a primitive that is defined by an iterator.  When given a
 -- literal, the iterator generates a sequences of answers.  Each
 -- answer is an array.  Each element in the array is either a number
 -- or a string.  The length of the array is equal to the arity of the
