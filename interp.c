@@ -56,16 +56,17 @@ usage(const char *prog)
 	  "Options:\n"
 	  "  -o file -- output to file (default is standard output)\n"
 	  "  -i      -- enter interactive mode after loading file\n"
+	  "  -t      -- print output as tab separated values\n"
 	  "  -v      -- print version information\n"
 	  "  -h      -- print this message\n"
 	  "Use - as a file name to specify standard input\n",
 	  prog);
 }
 
-/* A datalog answer printer. */
+/* A datalog answer printer using datalog syntax. */
 
 static int
-print_answers(dl_answers_t a)
+print_answers_as_datalog(dl_answers_t a)
 {
   int i, j, n;
   const char *p;
@@ -105,6 +106,46 @@ print_answers(dl_answers_t a)
   }
   dl_free(a);
   return 0;
+}
+
+/* A datalog answer printer using tab separated values. */
+
+static int
+print_answers_as_tab_separated_values(dl_answers_t a)
+{
+  int i, j, n;
+  if (!a)
+    return 0;
+  n = dl_getpredarity(a);
+  if (n == 0)
+    printf("\n");		/* Print zero arity predicate. */
+  else {			/* Print non-zero arity answers. */
+    for (i = 0; dl_getconst(a, i, 0); i++) {
+      dl_putlconst(stdout, dl_getconst(a, i, 0),
+		   dl_getconstlen(a, i, 0));
+      for (j = 1; j < n; j++) {
+	printf("\t");
+	dl_putlconst(stdout, dl_getconst(a, i, j),
+		     dl_getconstlen(a, i, j));
+      }
+      printf("\n");
+    }
+  }
+  dl_free(a);
+  return 0;
+}
+
+/* Choose datalog answer printer. */
+
+static int print_as_tsv = 0;
+
+static int
+print_answers(dl_answers_t a)
+{
+  if (print_as_tsv)
+    return print_answers_as_tab_separated_values(a);
+  else
+    return print_answers_as_datalog(a);
 }
 
 /* Load a Datalog file. */
@@ -291,7 +332,7 @@ main(int argc, char **argv)
   int rc;
 
   for (;;) {
-    int c = getopt(argc, argv, "o:ivh");
+    int c = getopt(argc, argv, "o:itvh");
     if (c == -1)
       break;
     switch (c) {
@@ -300,6 +341,9 @@ main(int argc, char **argv)
       break;
     case 'i':
       interact = 1;
+      break;
+    case 't':
+      print_as_tsv = 1;
       break;
     case 'v':
       print_version(argv[0]);

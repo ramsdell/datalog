@@ -1,5 +1,8 @@
 2012-04-01  John D. Ramsdell  <ramsdell@mitre.org>
 
+	* interp.c (print_answers_as_tab_separated_values): Added the -t
+	option that prints answers using tab separated values syntax.
+
 	* datalog.texi (Extending): Added a reference to the addition
 	primitive comment in datalog.lua.in.
 

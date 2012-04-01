@@ -15,4 +15,5 @@ To configure for Debian-based systems, type:
 As of version 1.8, the Datalog package can built on top of Lua 5.2.
 The version of Lua included in the package is still 5.1.4-3.
 
-As of version 1.9, the Datalog package uses Lua 5.1.5.
+As of version 1.9, the Datalog package uses Lua 5.1.5 and includes an
+option for printing its output using tab separated values syntax.

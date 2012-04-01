@@ -284,6 +284,7 @@ Usage: datalog [options] [file]
 Options:
   -o file -- output to file (default is standard output)
   -i      -- enter interactive mode after loading file
+  -t      -- print output as tab separated values
   -v      -- print version information
   -h      -- print this message
 Use - as a file name to specify standard input
