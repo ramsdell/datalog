@@ -727,6 +727,9 @@ datalog:add_iter_prim("three", 1, all_threes)
 @end group
 @end example
 
+A comment in the file @file{datalog.lua} shows how to add addition as
+a primitive.
+
 To better integrate with other software written Lua, an existing
 pointer to Lua's state can be made to be used as a Datalog
 interpreter.  The Datalog specific initialization is performed by

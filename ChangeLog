@@ -1,3 +1,15 @@
+2012-04-01  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* datalog.texi (Extending): Added a reference to the addition
+	primitive comment in datalog.lua.in.
+
+	* datalog.lua.in (add_iter_prim): Added a comment that shows how
+	to add addition as a primitive.
+
+	* datalog.lua.in (mk_intern): Coerced identifiers to be interned
+	into a string instead of relying on callers to always provide a
+	string.
+
 2012-02-25  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* lua/*: Updated Lua sources to version 5.1.5.
