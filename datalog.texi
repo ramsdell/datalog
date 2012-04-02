@@ -71,6 +71,7 @@ This work was supported by the MITRE-Sponsored Research Program.
 * Interpreter::                 Invoking and using.
 * Primitives::                  Predicates implemented by code.
 * Syntax::                      Some language details.
+* Import/Export::               Using tab separated values.
 * Library::                     Embedding the Datalog interpreter.
 * Extending::                   Adding primitive predicates
 * Copying::                     Terms for copying the software
@@ -318,7 +319,7 @@ constant and the other is a variable.
 @end group
 @end example
 
-@node    Syntax, Library, Primitives, Top
+@node    Syntax, Import/Export, Primitives, Top
 @chapter Syntax
 
 @cindex comment syntax
@@ -442,7 +443,48 @@ path(X, Y)?
 @end group
 @end example
 
-@node    Library, Extending, Syntax, Top
+@node    Import/Export, Library, Syntax, Top
+@chapter Import/Export
+
+@cindex tab separated values
+
+Tab separated values is a simple text format for a database table.
+Each record in the table is one line of text.  Fields within the
+record are separated by the tab character.  The script below
+translates a file of tab separated values into Datalog syntax.
+
+@example
+@group
+#! /bin/sh
+sed 's/\\/\\\\/g;s/"/\\"/g' -- "$@@" | awk -F'\t' '
+@{
+    if (NF == 0)
+	print "data()."
+    else @{
+	printf("data(\"%s\"", $1)
+	for (i = 2; i <= NF; i++)
+	    printf(", \"%s\"", $i)
+	print ")."
+    @}
+@}'
+@end group
+@end example
+
+The @code{-t} option can be used to cause the @command{datalog}
+program to print answers to queries as tab separated values.  The
+following script removes quoting introduced by @command{datalog}.
+
+@example
+@group
+#! /bin/sh
+sed 's/"\([^\t]*\)"/\1/g' -- "$@@" | awk '
+BEGIN @{ print "BEGIN @{" @}
+@{ print "print \""$0"\"" @}
+END @{ print "@}" @}' | awk -f -
+@end group
+@end example
+
+@node    Library, Extending, Import/Export, Top
 @chapter Library
 
 The Datalog library makes the services provided by a Datalog
