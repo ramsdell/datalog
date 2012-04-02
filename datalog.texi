@@ -459,12 +459,12 @@ translates a file of tab separated values into Datalog syntax.
 sed 's/\\/\\\\/g;s/"/\\"/g' -- "$@@" | awk -F'\t' '
 @{
     if (NF == 0)
-	print "data()."
+        print "data()."
     else @{
-	printf("data(\"%s\"", $1)
-	for (i = 2; i <= NF; i++)
-	    printf(", \"%s\"", $i)
-	print ")."
+        printf("data(\"%s\"", $1)
+        for (i = 2; i <= NF; i++)
+            printf(", \"%s\"", $i)
+        print ")."
     @}
 @}'
 @end group
