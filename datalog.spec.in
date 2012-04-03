@@ -3,7 +3,7 @@
 
 Name:		@PACKAGE@
 Version:	@VERSION@
-Release:	2%{?dist}
+Release:	1%{?dist}
 
 Source0:	http://downloads.sourceforge.net/datalog/%{name}-%{version}.tar.gz
 
