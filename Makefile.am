@@ -5,6 +5,7 @@ info_TEXINFOS = datalog.texi
 pkgdata_DATA = datalog.lua datalog.html
 dist_man_MANS = datalog.1
 noinst_PROGRAMS = bin2c
+dist_noinst_SCRIPTS = datalogimport datalogexport
 
 if NO_LUA
   SUBDIRS = lua

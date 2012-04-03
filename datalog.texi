@@ -470,9 +470,9 @@ sed 's/\\/\\\\/g;s/"/\\"/g' -- "$@@" | awk -F'\t' '
 @end group
 @end example
 
-The @code{-t} option can be used to cause the @command{datalog}
-program to print answers to queries as tab separated values.  The
-following script removes quoting introduced by @command{datalog}.
+The @code{-t} option causes the @command{datalog} program to print
+answers to queries as tab separated values.  The following script
+removes quoting introduced by @command{datalog}.
 
 @example
 @group
@@ -483,6 +483,30 @@ BEGIN @{ print "BEGIN @{" @}
 END @{ print "@}" @}' | awk -f -
 @end group
 @end example
+
+An example using @file{/etc/passwd} as a database table follows.  The
+example shows a convoluted way of determining my home directory, but
+never the less demonstrates the integration of @command{datalog} with
+other Unix tools.  In this example, assume the Datalog import script
+above has been placed into the file @command{datalogimport}.
+
+@example
+@group
+sed 's/:/\t/g' /etc/passwd \
+| datalogimport \
+| sed '
+$a\home(A,F):-data(A,B,C,D,E,F,G).\
+home(ramsdell,Dir)?' \
+| datalog -t - \
+| sed 's/\t/:/g'
+@end group
+@end example
+
+The first @command{sed} command converts @file{/etc/passwd} to tab
+separated values, the second @command{sed} command adds a rule and a
+query to the Datalog program, and the last @command{sed} command
+converts the output to colon separated values.  On my machine, the
+above script produces @code{ramsdell:/home/ramsdell}.
 
 @node    Library, Extending, Import/Export, Top
 @chapter Library

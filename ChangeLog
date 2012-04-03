@@ -1,3 +1,11 @@
+2012-04-03  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* datalog.texi (Import/Export): Added an example showing
+	/etc/passwd as the source of a database table.
+
+	* Makefile.am (dist_noinst_SCRIPTS): Added the datalogimport and
+	datalogexport scripts.
+
 2012-04-02  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* datalog.texi (Import/Export):  Added a new chapter describing
