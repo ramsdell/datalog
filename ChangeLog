@@ -1,3 +1,7 @@
+2012-04-04  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* NEWS: Converted the file to use outline format.
+
 2012-04-03  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* datalog.texi (Import/Export): Added an example showing
