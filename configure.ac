@@ -1,4 +1,4 @@
-AC_INIT(Datalog, 1.9)
+AC_INIT(Datalog, 2.0)
 
 AC_CONFIG_SRCDIR(datalog.c)
 

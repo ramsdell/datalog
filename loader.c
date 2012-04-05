@@ -262,52 +262,27 @@ addvar(loader_t *l)		/* Add a variable. */
 
 3. The character escapes are: a, b, f, n, r, t, v, \, ', ", ?.
 
-4. The numeric escapes: two uppercase hex digits.
+4. The numeric escapes: one, two, or three octal digits.
 
 */
 
 static int
-ishex(int ch)			/* Uppercase hex digit */
+isodigit(int ch)
 {
-  return ('0' <= ch && ch <= '9') || ('A' <= ch && ch <= 'F');
+  return '0' <= ch && ch <= '7';
 }
 
 static int
 toint(int ch)
 {
-  if ('0' <= ch && ch <= '9')
-    return ch - '0';
-  else
-    return ch + 10 - 'A';
-}
-
-static int
-isescape(int ch)		/* Character escapes */
-{
-  switch (ch) {
-  case 'a':
-  case 'b':
-  case 'f':
-  case 'n':
-  case 'r':
-  case 't':
-  case 'v':
-  case '\\':
-  case '\'':
-  case '"':
-  case '?':
-  case '\n':
-    return 1;
-  default:
-    return 0;
-  }
+  return ch - '0';		/* Assumes isodigit(ch) */
 }
 
 static int
 toescape(int ch)		/* Character escapes */
 {
-  switch (ch) {			/* Note toescape('\n') == 0. */
-  case 'a':			/* Used to skip \ nl sequences. */
+  switch (ch) {
+  case 'a':
     return '\a';
   case 'b':
     return '\b';
@@ -330,14 +305,15 @@ toescape(int ch)		/* Character escapes */
   case '?':
     return '?';
   default:
-    return 0;
+    return ch;
   }
 }
 
 /* State of string reading is either SEEN_NOTHING, SEEN_SLASH, or a
-   hex character. */
+   non-negative number. */
 #define SEEN_NOTHING -1
 #define SEEN_SLASH -2
+#define SEEN_OCTAL (1 << 12)
 
 /* In C99, use a variable length array instead of malloc. */
 
@@ -360,24 +336,46 @@ pushstring(loader_t *l, int s0, const char *s, size_t n)
     if (s0 == SEEN_NOTHING) {	/* Dispatch based on state. */
       if (ch == '\\')
 	s0 = SEEN_SLASH;
+      else if (ch == '\n')
+	err(l, "newline in string");
       else
 	*b++ = ch;
     }
     else if (s0 == SEEN_SLASH) {
-      if (ishex(ch))
-	s0 = ch;
+      if (isodigit(ch))
+	s0 = toint(ch);
       else {
-	ch = toescape(ch);
-	if (ch)			/* If ch is \n, do nothing. */
-	  *b++ = ch;
+	if (ch != '\n')		/* If ch is \n, do nothing. */
+	  *b++ = toescape(ch);
 	s0 = SEEN_NOTHING;
       }
     }
-    else {
-      *b++ = 16 * toint(s0) + toint(ch);
+    else if (s0 < SEEN_OCTAL) { /* One octal digit seen. */
+      if (isodigit(ch))
+	s0 = SEEN_OCTAL + 8 * s0 + toint(ch);
+      else {
+	*b++ = s0;
+	s--;	       /* Back up and look at this character later. */
+	s0 = SEEN_NOTHING;
+      }
+    }
+    else {			/* Two octal digits seen. */
+      s0 -= SEEN_OCTAL;		/* Get rid of octal mark. */
+      if (isodigit(ch))
+	*b++ = 8 * s0 + toint(ch);
+      else {
+	*b++ = s0;
+	s--;	       /* Back up and look at this character later. */
+      }
       s0 = SEEN_NOTHING;
     }
   }
+
+  if (s0 >= SEEN_OCTAL)
+    *b++ = s0 - SEEN_OCTAL;
+  else if (s0 >= 0)
+    *b++ = s0;
+    
   i = dl_pushlstring(l->db, buf, b - buf);
 #if !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
   free(buf);
@@ -394,7 +392,7 @@ addstr(loader_t *l)		/* Add a quoted string. */
 
   for (;;) {
     int ch;
-    int s0 = s1;	   /* s0 is the initial state for a buffer. */
+    int s0 = s1;	/* s0 is the initial state for this buffer. */
     int quote = s0 != SEEN_NOTHING;
 
     while (l->position < l->limit) {
@@ -419,18 +417,27 @@ addstr(loader_t *l)		/* Add a quoted string. */
 	  err(l, "newline in string");
       }
       else if (s1 == SEEN_SLASH) {
-	if (ishex(ch))
-	  s1 = ch;
-	else if (!isescape(ch))
-	  err(l, "bad escape character");
-	else
+	if (isodigit(ch))
+	  s1 = toint(ch);
+	else		/* Non-numeric escapes take two characters. */
 	  s1 = SEEN_NOTHING;
       }
-      else if (ishex(ch))
+      else if (s1 < SEEN_OCTAL) { /* One octal digit seen. */
+	if (isodigit(ch))
+	  s1 = SEEN_OCTAL + 8 * s1 + toint(ch);
+	else {
+	  s1 = SEEN_NOTHING;
+	  ungetch(l, ch);
+	}
+      }
+      else {			/* Two octal digits seen. */
 	s1 = SEEN_NOTHING;
-      else
-	err(l, "bad hex character");
+	if (!isodigit(ch))
+	  ungetch(l, ch);
+      }
     }
+
+    /* s1 is the initial state for the next buffer. */
 
     if (quote)
       chk(l, pushstring(l, s0, mark, l->position - mark));
@@ -821,7 +828,7 @@ dl_putc(int c, FILE *out)
     if (isprint(c))
       putc(c, out);
     else
-      fprintf(out, "\\%02X", (unsigned char)c);
+      fprintf(out, "\\%03o", (unsigned char)c);
     return;
   }
   putc('\\', out);

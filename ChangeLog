@@ -1,5 +1,10 @@
 2012-04-05  John D. Ramsdell  <ramsdell@mitre.org>
 
+	* loader.c (pushstring, addstr): In order to better integrate with
+	other Unix tools, numeric string escapes now consist of one, two,
+	or three octal digits.  This change makes this version
+	incompatible with previous versions.
+
 	* interp.c (main): Added the -l option that loads a Lua script
 	after the loading of datalog.lua.  The Lua script can be used to
 	add primitives.

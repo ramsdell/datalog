@@ -1,0 +1,6 @@
+octal(1, "\005").
+octal(2, "\aa").
+octal(3, "\a9").
+octal(4, "\3531").
+octal(5, "a\a\n").
+octal(6, "a\003\003").

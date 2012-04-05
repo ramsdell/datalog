@@ -365,9 +365,10 @@ but the final line containing the string can be ended with a backslash
 character, and each backslash newline pair is ignored.  The character
 escape codes from the C programming language are allowed---@samp{\a},
 @samp{\b}, @samp{\f}, @samp{\n}, @samp{\r}, @samp{\t}, @samp{\v},
-@samp{\'}, and @samp{\?}.  The numeric escape codes consist of exactly
-two uppercase hex digits.  Thus the ASCII character newline is
-@samp{\0A}, and zero is @samp{\00}.
+@samp{\'}, and @samp{\?}.  The numeric escape codes consist of one,
+two, or three octal digits.  Thus the ASCII character newline is
+@samp{\012}, and zero is @samp{\000}.  A Datalog string is also a
+string constant in C.
 
 @section Literals
 @cindex literal
@@ -385,9 +386,9 @@ identifier or a string.  The following are literals:
 @group
 parent(john, douglas)
 zero-arity-literal
-aBcD(-0, "\n\FF")
+aBcD(-0, "\n\377")
 "="(3,3)
-""(-0-0-0,&&&,***,"\00")
+""(-0-0-0,&&&,***,"\0")
 @end group
 @end example
 

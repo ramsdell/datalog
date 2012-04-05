@@ -1,11 +1,16 @@
 DATALOG NEWS -- history of user-visible changes.
 
-* Changes in version 1.9
+* Changes in version 2.0
 
 ** Better integration with other Unix tools
    An option for printing output using tab separated values was added.
    Its use is described in a new chapter in the info document called
    "Import/Export".
+
+** Incompatible change to string syntax
+   In order to better integrate with other Unix tools, numeric string
+   escapes now consist of one, two, or three octal digits.  As of this
+   version, a Datalog string is also a string constant in C.
 
 ** Better support for adding primitives
    The -l option loads primitives written in Lua.
