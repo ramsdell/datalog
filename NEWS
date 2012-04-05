@@ -7,7 +7,8 @@ DATALOG NEWS -- history of user-visible changes.
    Its use is described in a new chapter in the info document called
    "Import/Export".
 
-** Addition primitive example added to a comment in datalog.lua
+** Better support for adding primitives
+   The -l option loads primitives written in Lua.
 
 ** Updated included Lua to version 5.1.5
 

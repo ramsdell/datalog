@@ -24,6 +24,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <lua.h>
+#include <lauxlib.h>
 #include "datalog.h"
 
 #define STDIN_NAME "-"
@@ -56,6 +57,7 @@ usage(const char *prog)
 	  "Options:\n"
 	  "  -o file -- output to file (default is standard output)\n"
 	  "  -i      -- enter interactive mode after loading file\n"
+	  "  -l file -- load extensions written in Lua\n"
 	  "  -t      -- print output as tab separated values\n"
 	  "  -v      -- print version information\n"
 	  "  -h      -- print this message\n"
@@ -325,6 +327,7 @@ main(int argc, char **argv)
   int interact = 0;
   char *input = NULL;
   char *output = NULL;
+  char *lua = NULL;
 
   FILE *in = NULL;
 
@@ -332,7 +335,7 @@ main(int argc, char **argv)
   int rc;
 
   for (;;) {
-    int c = getopt(argc, argv, "o:itvh");
+    int c = getopt(argc, argv, "o:il:tvh");
     if (c == -1)
       break;
     switch (c) {
@@ -341,6 +344,9 @@ main(int argc, char **argv)
       break;
     case 'i':
       interact = 1;
+      break;
+    case 'l':
+      lua = optarg;
       break;
     case 't':
       print_as_tsv = 1;
@@ -388,6 +394,18 @@ main(int argc, char **argv)
   if (!db) {
     fprintf(stderr, "Internal error\n");
     return 1;
+  }
+
+  if (lua) {			/* Load Lua extensions if present  */
+    rc = luaL_dofile(db, lua);
+    if (rc) {
+      const char *s = lua_tostring(db, -1);
+      if (s)
+	fprintf(stderr, "Error loading %s: %s\n", lua, s);
+      else
+	fprintf(stderr, "Failed to load %s\n", lua);
+      return 1;
+    }
   }
 
   rc = 0;

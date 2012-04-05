@@ -72,8 +72,8 @@ This work was supported by the MITRE-Sponsored Research Program.
 * Primitives::                  Predicates implemented by code.
 * Syntax::                      Some language details.
 * Import/Export::               Using tab separated values.
+* Extensions::                  Adding primitive predicates
 * Library::                     Embedding the Datalog interpreter.
-* Extending::                   Adding primitive predicates
 * Copying::                     Terms for copying the software
 * Index::                       A concept index.
 @end menu
@@ -285,6 +285,7 @@ Usage: datalog [options] [file]
 Options:
   -o file -- output to file (default is standard output)
   -i      -- enter interactive mode after loading file
+  -l file -- load extensions written in Lua
   -t      -- print output as tab separated values
   -v      -- print version information
   -h      -- print this message
@@ -443,7 +444,7 @@ path(X, Y)?
 @end group
 @end example
 
-@node    Import/Export, Library, Syntax, Top
+@node    Import/Export, Extensions, Syntax, Top
 @chapter Import/Export
 
 @cindex tab separated values
@@ -508,7 +509,88 @@ query to the Datalog program, and the last @command{sed} command
 converts the output to colon separated values.  On my machine, the
 above script produces @code{ramsdell:/home/ramsdell}.
 
-@node    Library, Extending, Import/Export, Top
+@node    Extensions, Library, Import/Export, Top
+@chapter Extensions
+
+@cindex Lua
+Adding primitive predicates to the Datalog interpreter requires
+knowledge of its internals.  Much of the functionality of the
+interpreter is implemented using an embedded language called Lua,
+available at @uref{http://www.lua.org}.  Lua provides the needed
+infrastructure and a small footprint.  As an added bonus, the Lua
+language is a gem.  Knowledge of Lua is a prerequisite for what
+follows.
+
+The mechanics of adding primitives is straightforward.  Put your
+extensions in a file and load it using the @code{-l} option.
+The more difficult part is to decide what code should be
+loaded.
+
+The source file for the Datalog specific Lua code is installed in the
+Datalog package's data directory.  The path name of the source file
+typically ends with @file{share/datalog/datalog.lua}.  The section
+with a comment containing the words ``PRIMITIVES'' is relevant.
+
+@cindex @code{add_iter_prim}, @code{datalog} function
+@cindex @code{datalog}, Lua package
+There is good support for the case in which a primitive can be defined
+in terms of a Lua iterator.  The file @file{datalog.lua} defines the
+@code{datalog} package, and it contains the function
+@code{add_iter_prim}.  This function defines a primitive when given a
+predicate symbol, its arity, and an iterator.
+
+When given a literal, the iterator generates a sequences of answers.
+Each answer must be an array.  Each element in the array must be
+either a number or a string.  The length of the array must be equal to
+the arity of the predicate.
+
+What follows is a predicate defined by an iterator that produces one
+answer, and the answer has one element in it---the number three.
+
+@example
+@group
+local function all_threes(literal)
+  return function (s, v)
+    if v then
+      return nil
+    else
+      return @{3@}
+    end
+end
+datalog.add_iter_prim("three", 1, all_threes)
+@end group
+@end example
+
+This primitive for addition shows how to ask if term @code{t} is a
+constant via the construct @code{t:is_const()}.
+
+@example
+@group
+local function add(literal)
+   return function(s, v)
+             if v then
+                return nil
+             else
+                local x = literal[1]
+                local y = literal[2]
+                local z = literal[3]
+                if y:is_const() and z:is_const() then
+                   return @{y.id + z.id, y.id, z.id@}
+                elseif x:is_const() and z:is_const() then
+                   return @{x.id, x.id - z.id, z.id@}
+                elseif x:is_const() and y:is_const() then
+                   return @{x.id, y.id, x.id - y.id@}
+                else
+                   return nil
+                end
+             end
+          end
+end
+datalog.add_iter_prim("add", 3, add)
+@end group
+@end example
+
+@node    Library, Copying, Extensions, Top
 @chapter Library
 
 The Datalog library makes the services provided by a Datalog
@@ -731,84 +813,7 @@ size_t dl_widthofconst(const char *s);
 
 Determine the columns needed for a zero terminated constant.
 
-@node    Extending, Copying, Library, Top
-@chapter Extending
-
-@cindex Lua
-Adding primitive predicates to the Datalog interpreter requires
-knowledge of its internals.  Much of the functionality of the
-interpreter is implemented using an embedded language called Lua,
-available at @uref{http://www.lua.org}.  Lua provides the needed
-infrastructure and a small footprint.  As an added bonus, the Lua
-language is a gem.  Knowledge of Lua is a prerequisite for what
-follows.
-
-A pointer of type @code{dl_db_t}, introduced in the previous chapter,
-is implemented as a pointer to a structure that holds the state of a
-Lua interpreter.  When a Datalog interpreter is opened, a Lua
-interpreter is opened, some Lua libraries are loaded, and then a Lua
-program that implements much of the Datalog interpreter's
-functionality is loaded into the Lua interpreter.  Adding primitives
-to the Datalog interpreter involves adding code into the Lua
-interpreter returned by the @code{dl_open} function.
-
-The mechanics of adding primitives is straightforward.  The pointer of
-type @code{dl_db_t} is cast to a pointer of type
-@code{lua_State@tie{}*}.  This pointer can then be used with a variety
-of functions to load code into Lua, such as the @code{lua_dobuffer}
-function.  The more difficult part is to decide what code should be
-loaded.
-
-The source file for the Datalog specific Lua code is installed in the
-Datalog package's data directory.  The path name of the source file
-typically ends with @file{share/datalog/datalog.lua}.  The section
-with a comment containing the words ``PRIMITIVES'' is relevant.
-
-@cindex @code{add_iter_prim}, @code{datalog} function
-@cindex @code{datalog}, Lua package
-There is good support for the case in which a primitive can be defined
-in terms of a Lua iterator.  The file @file{datalog.lua} defines the
-@code{datalog} package, and it contains the function
-@code{add_iter_prim}.  This function defines a primitive when given a
-predicate symbol, its arity, and an iterator.
-
-When given a literal, the iterator generates a sequences of answers.
-Each answer must be an array.  Each element in the array must be
-either a number or a string.  The length of the array must be equal to
-the arity of the predicate.
-
-What follows is a predicate defined by an iterator that produces one
-answer, and the answer has one element in it---the number three.
-
-@example
-@group
-local function all_threes(literal)
-  return function (s, v)
-    if v then
-      return nil
-    else
-      return @{3@}
-    end
-end
-datalog:add_iter_prim("three", 1, all_threes)
-@end group
-@end example
-
-A comment in the file @file{datalog.lua} shows how to add addition as
-a primitive.
-
-To better integrate with other software written Lua, an existing
-pointer to Lua's state can be made to be used as a Datalog
-interpreter.  The Datalog specific initialization is performed by
-casting a pointer to Lua's state to a pointer of type @code{dl_db_t},
-and giving to
-
-@cindex @code{dl_init}, library function
-@example
-int dl_init(dl_db_t);
-@end example
-
-@node Copying, Index, Extending, Top
+@node Copying, Index, Library, Top
 @appendix Copying the Software
 
 The software described by this manual is covered by the terms of the

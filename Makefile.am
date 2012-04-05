@@ -32,4 +32,4 @@ AM_MAKEINFOHTMLFLAGS = --no-split
 EXTRA_DIST = datalog.html try.sh ancestor.prolog ancestor.txt		\
 bidipath.prolog bidipath.txt laps.prolog laps.txt long.prolog long.txt	\
 path.prolog path.txt pq.prolog pq.txt revpath.prolog revpath.txt	\
-true.prolog true.txt says.prolog says.txt
+true.prolog true.txt says.prolog says.txt add.lua

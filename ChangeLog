@@ -1,3 +1,9 @@
+2012-04-05  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* interp.c (main): Added the -l option that loads a Lua script
+	after the loading of datalog.lua.  The Lua script can be used to
+	add primitives.
+
 2012-04-04  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* NEWS: Converted the file to use outline format.
