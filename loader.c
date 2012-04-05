@@ -375,7 +375,7 @@ pushstring(loader_t *l, int s0, const char *s, size_t n)
     *b++ = s0 - SEEN_OCTAL;
   else if (s0 >= 0)
     *b++ = s0;
-    
+
   i = dl_pushlstring(l->db, buf, b - buf);
 #if !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
   free(buf);
