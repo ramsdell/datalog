@@ -404,10 +404,6 @@ addstr(loader_t *l)		/* Add a quoted string. */
     int pushback = EMPTY_PUSHBACK;
 
     while (l->position < l->limit) {
-#if 0
-      fprintf(stderr, "s0 %2d s1 %2d ch %d %c pushback %d\n", 
-      	      s0, s1, ch, ch, pushback);
-#endif
       if (pushback == EMPTY_PUSHBACK)
 	ch = getch(l);		/* For each character in the */
       else {			/* current buffer... */
@@ -453,7 +449,7 @@ addstr(loader_t *l)		/* Add a quoted string. */
 	s1 = SEEN_NOTHING;
       }
     }
-    
+
     if (pushback == '"') {
       if (quote)		/* String is complete. */
 	chk(l, pushstring(l, s0, 1, mark, l->position - mark - 1));
@@ -480,11 +476,9 @@ addstr(loader_t *l)		/* Add a quoted string. */
       more = 1;
 
     ch = getch(l);		/* Force a buffer read. */
+    if (ch == EOF)
+      err(l, "end of input in string");
     if (s1 == SEEN_NOTHING && ch == '"') {
-#if 0
-      fprintf(stderr, "Bing q %d s1 %d pb %d o %d\n", 
-	      quote, s1, pushback, octal);
-#endif
       if (quote && s1 >= 0) {
 	char c = s1;
 	if (s1 >= SEEN_OCTAL)
