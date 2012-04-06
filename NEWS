@@ -10,7 +10,7 @@ DATALOG NEWS -- history of user-visible changes.
 ** Incompatible change to string syntax
    In order to better integrate with other Unix tools, numeric string
    escapes now consist of one, two, or three octal digits.  As of this
-   version, a Datalog string is also a string constant in C.
+   version, a printed Datalog string is also a string constant in C.
 
 ** Better support for adding primitives
    The -l option loads primitives written in Lua.
