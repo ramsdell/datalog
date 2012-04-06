@@ -1,3 +1,12 @@
+2012-04-06  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* loader.c (addstr): Fixed two bugs associated with the end of a
+	string.  Fixed the case in which the last character in a buffer is
+	double quote and the previous character is part of a numerical
+	escape.  Also fixed the case in which a pushed buffer was followed
+	by a buffer read giving a double quote, but the state s1 was not
+	SEEN_NOTHING.
+
 2012-04-05  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* loader.c (pushstring, addstr): In order to better integrate with

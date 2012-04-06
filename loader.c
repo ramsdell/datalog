@@ -319,7 +319,7 @@ toescape(int ch)		/* Character escapes */
 
 /* Push a string that needs quote removal. */
 static int
-pushstring(loader_t *l, int s0, const char *s, size_t n)
+pushstring(loader_t *l, int s0, int last, const char *s, size_t n)
 {
   const char *end = s + n;
 #if !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
@@ -371,10 +371,12 @@ pushstring(loader_t *l, int s0, const char *s, size_t n)
     }
   }
 
-  if (s0 >= SEEN_OCTAL)
-    *b++ = s0 - SEEN_OCTAL;
-  else if (s0 >= 0)
-    *b++ = s0;
+  if (last) {			/* Flush last byte at string end */
+    if (s0 >= SEEN_OCTAL)
+      *b++ = s0 - SEEN_OCTAL;
+    else if (s0 >= 0)
+      *b++ = s0;
+  }
 
   i = dl_pushlstring(l->db, buf, b - buf);
 #if !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
@@ -382,6 +384,9 @@ pushstring(loader_t *l, int s0, const char *s, size_t n)
 #endif
   return i;
 }
+
+/* This is a very complicated function.  At the very least, it needs
+   many more detailed comments. */
 
 static token_t
 addstr(loader_t *l)		/* Add a quoted string. */
@@ -394,15 +399,27 @@ addstr(loader_t *l)		/* Add a quoted string. */
     int ch;
     int s0 = s1;	/* s0 is the initial state for this buffer. */
     int quote = s0 != SEEN_NOTHING;
+    int pushback = SEEN_OCTAL;
+    int octal = -1;
 
     while (l->position < l->limit) {
-      ch = getch(l);		/* For each character in the */
+#if 0
+      fprintf(stderr, "s0 %2d s1 %2d ch %d %c pushback %d\n", 
+      	      s0, s1, ch, ch, pushback);
+#endif
+      if (pushback == SEEN_OCTAL)
+	ch = getch(l);		/* For each character in the */
+      else {
+	ch = pushback;
+	pushback = SEEN_OCTAL;
+	octal = -1;
+      }
       if (ch == EOF)		/* current buffer... */
 	err(l, "end of input in string");
       if (s1 == SEEN_NOTHING) {
 	if (ch == '"') {
 	  if (quote)		/* String is complete. */
-	    chk(l, pushstring(l, s0, mark, l->position - mark - 1));
+	    chk(l, pushstring(l, s0, 1, mark, l->position - mark - 1));
 	  else
 	    chk(l, dl_pushlstring(l->db, mark, l->position - mark - 1));
 	  if (more)
@@ -426,21 +443,37 @@ addstr(loader_t *l)		/* Add a quoted string. */
 	if (isodigit(ch))
 	  s1 = SEEN_OCTAL + 8 * s1 + toint(ch);
 	else {
+	  octal = s1;
+	  pushback = ch;
 	  s1 = SEEN_NOTHING;
-	  ungetch(l, ch);
 	}
       }
       else {			/* Two octal digits seen. */
+	s0 -= SEEN_OCTAL;
+	if (isodigit(ch))
+	  octal = 8 * s0 + toint(ch);
+	else {
+	  octal = s0;
+	  pushback = ch;
+	}
 	s1 = SEEN_NOTHING;
-	if (!isodigit(ch))
-	  ungetch(l, ch);
       }
+    }
+    
+    if (pushback == '"') {
+      if (quote)		/* String is complete. */
+	chk(l, pushstring(l, s0, 1, mark, l->position - mark - 1));
+      else
+	chk(l, dl_pushlstring(l->db, mark, l->position - mark - 1));
+      if (more)
+	chk(l, dl_concat(l->db));
+      return ID;
     }
 
     /* s1 is the initial state for the next buffer. */
 
     if (quote)
-      chk(l, pushstring(l, s0, mark, l->position - mark));
+      chk(l, pushstring(l, s0, 0, mark, l->position - mark));
     else
       chk(l, dl_pushlstring(l->db, mark, l->position - mark));
     if (more)
@@ -449,8 +482,20 @@ addstr(loader_t *l)		/* Add a quoted string. */
       more = 1;
 
     ch = getch(l);		/* Force a buffer read. */
-    if (ch == '"')
+    if (s1 == SEEN_NOTHING && ch == '"') {
+#if 0
+      fprintf(stderr, "Bing q %d s1 %d pb %d o %d\n", 
+	      quote, s1, pushback, octal);
+#endif
+      if (quote && s1 >= 0) {
+	char c = s1;
+	if (s1 >= SEEN_OCTAL)
+	  c = s1 - SEEN_OCTAL;
+	chk(l, dl_pushlstring(l->db, &c, 1));
+	chk(l, dl_concat(l->db));
+      }
       return ID;
+    }
     else
       ungetch(l, ch);
     mark = l->position - 1;
