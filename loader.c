@@ -388,6 +388,8 @@ pushstring(loader_t *l, int s0, int last, const char *s, size_t n)
 /* This is a very complicated function.  At the very least, it needs
    many more detailed comments. */
 
+#define EMPTY_PUSHBACK (1 << 12)
+
 static token_t
 addstr(loader_t *l)		/* Add a quoted string. */
 {				/* Understand addid before you */
@@ -399,22 +401,20 @@ addstr(loader_t *l)		/* Add a quoted string. */
     int ch;
     int s0 = s1;	/* s0 is the initial state for this buffer. */
     int quote = s0 != SEEN_NOTHING;
-    int pushback = SEEN_OCTAL;
-    int octal = -1;
+    int pushback = EMPTY_PUSHBACK;
 
     while (l->position < l->limit) {
 #if 0
       fprintf(stderr, "s0 %2d s1 %2d ch %d %c pushback %d\n", 
       	      s0, s1, ch, ch, pushback);
 #endif
-      if (pushback == SEEN_OCTAL)
+      if (pushback == EMPTY_PUSHBACK)
 	ch = getch(l);		/* For each character in the */
-      else {
+      else {			/* current buffer... */
 	ch = pushback;
-	pushback = SEEN_OCTAL;
-	octal = -1;
+	pushback = EMPTY_PUSHBACK;
       }
-      if (ch == EOF)		/* current buffer... */
+      if (ch == EOF)
 	err(l, "end of input in string");
       if (s1 == SEEN_NOTHING) {
 	if (ch == '"') {
@@ -443,19 +443,13 @@ addstr(loader_t *l)		/* Add a quoted string. */
 	if (isodigit(ch))
 	  s1 = SEEN_OCTAL + 8 * s1 + toint(ch);
 	else {
-	  octal = s1;
 	  pushback = ch;
 	  s1 = SEEN_NOTHING;
 	}
       }
       else {			/* Two octal digits seen. */
-	s0 -= SEEN_OCTAL;
-	if (isodigit(ch))
-	  octal = 8 * s0 + toint(ch);
-	else {
-	  octal = s0;
+	if (!isodigit(ch))
 	  pushback = ch;
-	}
 	s1 = SEEN_NOTHING;
       }
     }
@@ -469,6 +463,10 @@ addstr(loader_t *l)		/* Add a quoted string. */
 	chk(l, dl_concat(l->db));
       return ID;
     }
+    else if (pushback == '\\')
+      s1 = SEEN_SLASH;
+    else if (pushback == '\n')
+      err(l, "newline in string");
 
     /* s1 is the initial state for the next buffer. */
 
