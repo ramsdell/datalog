@@ -478,16 +478,8 @@ addstr(loader_t *l)		/* Add a quoted string. */
     ch = getch(l);		/* Force a buffer read. */
     if (ch == EOF)
       err(l, "end of input in string");
-    if (s1 == SEEN_NOTHING && ch == '"') {
-      if (quote && s1 >= 0) {
-	char c = s1;
-	if (s1 >= SEEN_OCTAL)
-	  c = s1 - SEEN_OCTAL;
-	chk(l, dl_pushlstring(l->db, &c, 1));
-	chk(l, dl_concat(l->db));
-      }
+    if (s1 == SEEN_NOTHING && ch == '"')
       return ID;
-    }
     else
       ungetch(l, ch);
     mark = l->position - 1;
