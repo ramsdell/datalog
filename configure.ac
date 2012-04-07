@@ -4,7 +4,7 @@ AC_CONFIG_SRCDIR(datalog.c)
 
 AM_INIT_AUTOMAKE
 
-AC_PROG_CC
+AC_PROG_CC_C99
 
 # Add warning when using GGG
 if test "X$GCC" = Xyes ; then
@@ -14,6 +14,14 @@ fi
 LT_INIT([disable-shared])
 
 AC_SEARCH_LIBS([exp], [m])
+
+AC_CHECK_HEADERS([readline/readline.h readline/history.h])
+
+AC_SEARCH_LIBS([readline], [readline])
+
+AC_SEARCH_LIBS([add_history], [readline],
+	       [AC_DEFINE(HAVE_LIBREADLINE, 1,
+                 [Define if you have a readline compatible library])])
 
 AC_ARG_WITH([lua],
   [AS_HELP_STRING([--with-lua],

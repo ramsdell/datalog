@@ -25,6 +25,14 @@
 #include <unistd.h>
 #include <lua.h>
 #include <lauxlib.h>
+#if defined HAVE_LIBREADLINE
+#if defined HAVE_READLINE_READLINE_H
+#include <readline/readline.h>
+#endif
+#if defined HAVE_READLINE_HISTORY_H
+#include <readline/history.h>
+#endif
+#endif
 #include "datalog.h"
 
 #define STDIN_NAME "-"
@@ -216,28 +224,37 @@ typedef struct {
   int done;			/* Is current input complete? */
   int again;	/* Has some of current input already been returned? */
   int eof;			/* Was EOF found during reading? */
+#if defined HAVE_LIBREADLINE
+  char *buffer;
+#else
   char buffer[LINE_SIZE];
+#endif
 } linebuffer_t;
 
 static const char *
 getaline(void *data, size_t *size)
 {
   linebuffer_t *lb = (linebuffer_t *)data;
-  char *buf = lb->buffer;
+  char *buf;
   int nofiles = lb->again;
+  char *prompt = lb->again ? ">>" : ">";
   FILE *in;
   size_t n;
   if (lb->done)		     /* We're done, so return end of input. */
     return NULL;
 
-  if (lb->again)		/* Show prompt. */
-    printf(">");
   lb->again = 1;
-  printf("> ");
-  fflush(stdout);
   lb->eof = 0;
 
-  if (!fgets(buf, LINE_SIZE, stdin)) {
+#if defined HAVE_LIBREADLINE
+  lb->buffer = buf = readline(prompt);
+#else
+  fputs(prompt, stdout);	/* Show prompt */
+  fflush(stdout);		/* then get a line */
+  buf = fgets(lb->buffer, LINE_SIZE, stdin);
+#endif
+
+  if (!buf) {
     lb->done = 1;
     lb->eof = 1;		/* EOF or error found. */
     return NULL;
@@ -249,10 +266,12 @@ getaline(void *data, size_t *size)
     return NULL;
   }
   else if (!nofiles && buf[0] == '=') {	/* File loading requested. */
+#if !defined HAVE_LIBREADLINE
     if (buf[n - 1] != '\n') {	/* Line not finished. */
       fprintf(stderr, "file name too long\n");
       return NULL;		/* Give up. */
     }
+#endif
     buf[n - 1] = 0;
     in = fopen(buf + 1, "r");	/* Only active at the beginning */
     if (!in)			/* of input--!nofile check.*/
@@ -262,10 +281,12 @@ getaline(void *data, size_t *size)
     lb->done = 1;		/* Consider the current input */
     return NULL;		/* as containing no data. */
   }
+#if !defined HAVE_LIBREADLINE
   else if (buf[n - 1] != '\n') { /* Line not finished. */
     lb->done = 0;		/* Continuation needed. */
     *size = n;
   }
+#endif
   else if (n > 1 && buf[n - 2] == '\\') { /* Line continued. */
     lb->done = 0;		/* Lines that end in back slash */
     *size = n - 2;		/* are continued. */
@@ -296,6 +317,12 @@ interp(dl_db_t db)
   do {
     lb.again = lb.done = 0;
     rc = dl_load(db, getaline, lineerror, &lb); /* Read. */
+#if defined HAVE_LIBREADLINE
+    if (lb.buffer && *lb.buffer)
+      add_history(lb.buffer);
+    free(lb.buffer);
+    lb.buffer = NULL;
+#endif
     if (!rc) {
       rc = dl_ask(db, &a);	/* Eval. */
       if (!rc) {

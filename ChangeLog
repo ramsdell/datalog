@@ -1,3 +1,14 @@
+2012-04-07  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* git: Tagged as datalog-2.0 with tag v2.0.
+
+	* configure.ac:  Enabled the use of the one C99 feature used in
+	the program.  When compiled with a C99 compiler, pushstring in
+	loader.c uses a variable length array instead of a malloc.
+
+	* interp.c (getaline): Added support for GNU readline in the
+	interpreter when it is available.
+
 2012-04-06  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* loader.c (addstr): Fixed two bugs associated with the end of a

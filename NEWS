@@ -15,6 +15,8 @@ DATALOG NEWS -- history of user-visible changes.
 ** Better support for adding primitives
    The -l option loads primitives written in Lua.
 
+** GNU readline support added to the interpreter
+
 ** Updated included Lua to version 5.1.5
 
 * Changes in version 1.8
