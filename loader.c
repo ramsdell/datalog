@@ -310,24 +310,26 @@ toescape(int ch)		/* Character escapes */
 }
 
 /* State of string reading is either SEEN_NOTHING, SEEN_SLASH, or a
-   non-negative number. */
+   non-negative number.  The SEEN_OCTAL MARK is added when two digits
+   have been seen. */
 #define SEEN_NOTHING -1
 #define SEEN_SLASH -2
 #define SEEN_OCTAL (1 << 12)
 
 /* In C99, use a variable length array instead of malloc. */
 
-/* Push a string that needs quote removal. */
+/* Push a string that needs quote removal.  Last is true when this
+   call completes the contents of a string. */
 static int
 pushstring(loader_t *l, int s0, int last, const char *s, size_t n)
 {
-  const char *end = s + n;
+  const char *end = s + n;	/* The address just beyond s */
 #if !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
   char *buf = (char *)malloc(n + 1);
 #else
   char buf[n + 1];
 #endif
-  char *b = buf;
+  char *b = buf;   /* Points to the place to add the next character */
   int i;
   if (!buf)
     err(l, "memory exhausted");
@@ -385,8 +387,17 @@ pushstring(loader_t *l, int s0, int last, const char *s, size_t n)
   return i;
 }
 
-/* This is a very complicated function.  At the very least, it needs
-   many more detailed comments. */
+/* This is a very complicated function and has been the source of
+   several obsure bugs.  It orchestrates the handling of reading a
+   string that spans multiple buffers.  For a buffer that ends a
+   string, it determines if the buffer needs escape sequences
+   expanded, and hands off the task to the appropriate routine.  A
+   buffer that has no escape sequences is not copied, and therefore
+   handled very efficiently.  For a buffer that does not end the
+   string, it computes the initial state for string processing by the
+   next buffer, and then hands off the task of processing the current
+   buffer to the appropriate routine.  To accomplish its task, this
+   routine must compute states exactly as pushstring does. */
 
 #define EMPTY_PUSHBACK (1 << 12)
 
@@ -397,7 +408,7 @@ addstr(loader_t *l)		/* Add a quoted string. */
   const char *mark = l->position;
   int s1 = SEEN_NOTHING;	/* Current state for a buffer. */
 
-  for (;;) {
+  for (;;) {			/* For each buffer */
     int ch;
     int s0 = s1;	/* s0 is the initial state for this buffer. */
     int quote = s0 != SEEN_NOTHING;
