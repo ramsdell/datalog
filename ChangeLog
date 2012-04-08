@@ -1,5 +1,8 @@
 2012-04-08  John D. Ramsdell  <ramsdell@mitre.org>
 
+	* try.sh, Makefile.am: Changed the extension used for Datalog input
+	from .prolog to .dl.
+
 	* interp.c (getaline): Fixed end of line bugs when using
 	readline for the case of a line continued with '\' and when
 	reading a file with '='.

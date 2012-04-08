@@ -29,8 +29,7 @@ dl_lua.h:	bin2c$(EXEEXT) datalog.lua
 
 AM_MAKEINFOHTMLFLAGS = --no-split
 
-EXTRA_DIST = datalog.html try.sh ancestor.prolog ancestor.txt		\
-bidipath.prolog bidipath.txt laps.prolog laps.txt long.prolog		\
-long.txt path.prolog path.txt pq.prolog pq.txt revpath.prolog		\
-revpath.txt true.prolog true.txt says.prolog says.txt octal.prolog	\
-octal.txt add.lua
+EXTRA_DIST = datalog.html try.sh ancestor.dl ancestor.txt bidipath.dl	\
+bidipath.txt laps.dl laps.txt long.dl long.txt path.dl path.txt pq.dl	\
+pq.txt revpath.dl revpath.txt true.dl true.txt says.dl says.txt		\
+octal.dl octal.txt add.lua
