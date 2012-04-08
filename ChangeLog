@@ -1,5 +1,7 @@
 2012-04-08  John D. Ramsdell  <ramsdell@mitre.org>
 
+	* git: Tagged as datalog-2.1 with tag v2.1.
+
 	* try.sh, Makefile.am: Changed the extension used for Datalog input
 	from .prolog to .dl.
 

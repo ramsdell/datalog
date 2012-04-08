@@ -88,7 +88,7 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
-* Sun Apr  8 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.0.1-1
+* Sun Apr  8 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.1-1
 - Added AUTHORS and NEWS to %%doc
 
 * Thu Jan 26 2012 John D. Ramsdell <ramsdell@mitre.org> - 1.8-2
