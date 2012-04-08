@@ -22,6 +22,7 @@
 /* See the header file datalog.h for comments about the C API.
    Comments in this file focus on the implemention only. */
 
+#include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,21 +32,15 @@
 #include "datalog.h"
 #include "dl_lua.h"
 
-#if defined DEBUG_DATALOG
-#include <stdio.h>
-#endif
-
 static int dl_pcall(dl_db_t L, int nargs, int nresults)
 {
   int i = lua_pcall(L, nargs, nresults, 0);
   if (i) {
-#if defined DEBUG_DATALOG
     const char *s = lua_tostring(L, -1);
     if (s)
       fprintf(stderr, "%s\n", s);
     else
       fprintf(stderr, "no error message available\n");
-#endif
     lua_pop(L, 1);
   }
   return i;
@@ -57,13 +52,11 @@ dl_lua(dl_db_t L)
   int i = luaL_loadbuffer(L, (const char *)datalog_lua_bytes,
 			  sizeof(datalog_lua_bytes), datalog_lua_source);
   if (i) {
-#if defined DATALOG_DEBUG
     const char *s = lua_tostring(L, -1);
     if (s)
       fprintf(stderr, "%s\n", s);
     else
       fprintf(stderr, "no error message available\n", s);
-#endif
     lua_pop(L, 1);
     return i;
   }
