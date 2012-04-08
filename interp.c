@@ -271,8 +271,8 @@ getaline(void *data, size_t *size)
       fprintf(stderr, "file name too long\n");
       return NULL;		/* Give up. */
     }
-#endif
     buf[n - 1] = 0;
+#endif
     in = fopen(buf + 1, "r");	/* Only active at the beginning */
     if (!in)			/* of input--!nofile check.*/
       perror(buf + 1);
@@ -286,11 +286,16 @@ getaline(void *data, size_t *size)
     lb->done = 0;		/* Continuation needed. */
     *size = n;
   }
-#endif
   else if (n > 1 && buf[n - 2] == '\\') { /* Line continued. */
     lb->done = 0;		/* Lines that end in back slash */
     *size = n - 2;		/* are continued. */
   }
+#else
+  else if (buf[n - 1] == '\\') { /* Line continued. */
+    lb->done = 0;		/* Lines that end in back slash */
+    *size = n - 1;		/* are continued. */
+  }
+#endif
   else {			/* Complete input found, in other */
     lb->done = 1;		/* words, an unescapped newline */
     *size = n;			/* terminated input was found. */
