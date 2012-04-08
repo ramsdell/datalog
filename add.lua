@@ -7,10 +7,30 @@ local function add(literal)
 		local y = literal[2]
 		local z = literal[3]
 		if y:is_const() and z:is_const() then
-		   return {y.id + z.id, y.id, z.id}
+                   local j = tonumber(y.id)
+                   local k = tonumber(z.id)
+                   if j and k then
+                      return {j + k, j, k}
+                   else
+                      return nil
+                   end
 		elseif x:is_const() and z:is_const() then
+                   local i = tonumber(y.id)
+                   local k = tonumber(z.id)
+                   if i and k then
+                      return {i, i - k, k}
+                   else
+                      return nil
+                   end
 		   return {x.id, x.id - z.id, z.id}
 		elseif x:is_const() and y:is_const() then
+                   local i = tonumber(x.id)
+                   local j = tonumber(y.id)
+                   if i and j then
+                      return {i, j, i - j}
+                   else
+                      return nil
+                   end
 		   return {x.id, y.id, x.id - y.id}
 		else
 		   return nil

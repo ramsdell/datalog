@@ -1,5 +1,7 @@
 2012-04-08  John D. Ramsdell  <ramsdell@mitre.org>
 
+	* add.lua: Added checks to ensure arguments are numbers.
+
 	* datalog.c (dl_pcall, dl_lua): Removed DATALOG_DEBUG, and now
 	always print the error message returned from Lua.  This message is
 	very useful now that its so easy to add primitives using the -l
