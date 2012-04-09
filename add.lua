@@ -31,7 +31,6 @@ local function add(literal)
                    else
                       return nil
                    end
-		   return {x.id, y.id, x.id - y.id}
 		else
 		   return nil
 		end
