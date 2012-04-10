@@ -830,29 +830,36 @@ add_iter_prim("three", 1,
 			end
 	      end)
 
--- Example of the addition primitive.
+-- Example of the successor primitive.
 
-add_iter_prim("add", 3,
-	      function(literal)
-                 return function(s, v)
-                           if v then
-			      return nil
-			   else
-			      local x = literal[1]
-			      local y = literal[2]
-			      local z = literal[3]
-			      if y:is_const() and z:is_const() then
-			         return {y.id + z.id, y.id, z.id}
-                              elseif x:is_const() and z:is_const() then
-			         return {x.id, x.id - z.id, z.id}
-                              elseif x:is_const() and y:is_const() then
-			         return {x.id, y.id, x.id - y.id}
-                              else
-			         return nil
-                              end
-                           end
-                        end
-	      end)
+local function succ(literal)
+   return function(s, v)
+	     if v then
+		return nil
+	     else
+		local x = literal[1]
+		local y = literal[2]
+		if y:is_const() then
+		   local j = tonumber(y.id)
+		   if j and j >= 0 then
+		      return {j + 1, j}
+		   else
+		      return nil
+		   end
+		elseif x:is_const() then
+		   local i = tonumber(x.id)
+		   if i and i > 0 then
+		      return {i, i - 1}
+		   else
+		      return nil
+		   end
+		else
+		   return nil
+		end
+	     end
+	  end
+end
+datalog.add_iter_prim("succ", 2, succ)
 
 --]]
 
