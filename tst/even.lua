@@ -1,5 +1,16 @@
 require "datalog"
 
+-- This file shows how to use the datalog package with Lua.  The
+-- example demonstrates a rather inefficient way of determining if a
+-- number is odd.
+
+-- Abbreviations that make the code more readable.
+
+mv = datalog.make_var
+mc = datalog.make_const
+ml = datalog.make_literal
+mr = datalog.make_clause
+
 -- RULES
 
 -- The even and odd rules are:
@@ -8,54 +19,33 @@ require "datalog"
 -- even(N) :- succ(N, M), odd(M).
 -- odd(N) :- succ(N, M), even(M).
 
--- Convenience functions for making literals used in the rules
-
-function even(n)
-   return datalog.make_literal("even", {n})
-end
-
-function odd(n)
-   return datalog.make_literal("odd", {n})
-end
-
-function succ(m, n)
-   return datalog.make_literal("succ", {m, n})
-end
-
-function eq(m, n)
-   return datalog.make_literal("=", {m, n})
-end
-
 -- Translation of:
 -- even(N) :- N = 0.
 
 function even_base_case()
-   local head = even(datalog.make_var("N"))
-   local body = {eq(datalog.make_var("N"),
-		    datalog.make_const("0"))}
-   return datalog.assert(datalog.make_clause(head, body))
+   local head = ml("even", {mv("N")})
+   local body = {ml("=", {mv("N"), mc("0")})}
+   return datalog.assert(mr(head, body))
 end
 
 -- Translation of:
 -- even(N) :- succ(N, M), odd(M).
 
 function even_inductive_case()
-   local head = even(datalog.make_var("N"))
-   local body = {succ(datalog.make_var("N"),
-		      datalog.make_var("M")),
-		 odd(datalog.make_var("M"))}
-   return datalog.assert(datalog.make_clause(head, body))
+   local head = ml("even", {mv("N")})
+   local body = {ml("succ", {mv("N"), mv("M")}),
+		 ml("odd", {mv("M")})}
+   return datalog.assert(mr(head, body))
 end
 
 -- Translation of:
 -- odd(N) :- succ(N, M), even(M).
 
 function odd_inductive_case()
-   local head = odd(datalog.make_var("N"))
-   local body = {succ(datalog.make_var("N"),
-		      datalog.make_var("M")),
-		 even(datalog.make_var("M"))}
-   return datalog.assert(datalog.make_clause(head, body))
+   local head = ml("odd", {mv("N")})
+   local body = {ml("succ", {mv("N"), mv("M")}),
+		 ml("even", {mv("M")})}
+   return datalog.assert(mr(head, body))
 end
 
 -- Assert the rules
@@ -70,9 +60,8 @@ end
 
 function facts()
    for i = 1,2000 do
-      local fact = succ(datalog.make_const(i),
-			datalog.make_const(i-1))
-      datalog.assert(datalog.make_clause(fact, {}))
+      local fact = ml("succ", {mc(i), mc(i-1)})
+      datalog.assert(mr(fact, {}))
    end
 end
 
@@ -115,7 +104,7 @@ end
 -- is a database table.
 
 function ask_odd(n)
-   local ans = datalog.ask(odd(datalog.make_const(n)))
+   local ans = datalog.ask(ml("odd", {mc(n)}))
    if ans then
       for i = 1,#ans do
 	 io.write(ans.name)
