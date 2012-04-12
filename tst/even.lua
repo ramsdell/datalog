@@ -11,6 +11,23 @@ mc = datalog.make_const
 ml = datalog.make_literal
 mr = datalog.make_clause
 
+-- Ask with a simple printer for answers
+
+function ask(literal)
+   local ans = datalog.ask(literal)
+   if ans then
+      for i = 1,#ans do
+	 io.write(ans.name)
+	 for j = 1,ans.arity do
+	    io.write("\t")
+	    io.write(ans[i][j])
+	 end
+	 io.write("\n")
+      end
+   end
+   return ans
+end
+
 -- RULES
 
 -- The even and odd rules are:
@@ -58,8 +75,8 @@ end
 
 -- The successor relation as a database table
 
-function facts()
-   for i = 1,2000 do
+function facts(n)
+   for i = 1,n do
       local fact = ml("succ", {mc(i), mc(i-1)})
       datalog.assert(mr(fact, {}))
    end
@@ -99,21 +116,43 @@ function prims()
 end
 
 -- Load the rules and either the facts or the prims and then ask if
--- 1999 is odd.  The answer is quickly found when the successor
--- relation is implmented as a primitive, but is found slowly when it
--- is a database table.
+-- something like 1999 is odd.  The answer is quickly found when the
+-- successor relation is implmented as a primitive, but is found
+-- slowly when it is a database table.
 
 function ask_odd(n)
-   local ans = datalog.ask(ml("odd", {mc(n)}))
-   if ans then
-      for i = 1,#ans do
-	 io.write(ans.name)
-	 for j = 1,ans.arity do
-	    io.write("\t")
-	    io.write(ans[i][j])
-	 end
-	 io.write("\n")
-      end
+   return ask(ml("odd", {mc(n)}))
+end
+
+-- Usage as a stand-alone script:
+
+-- lua even.lua [NUMBER [NFACTS]]
+-- Asks odd(NUMBER) using NFACTS facts of the succ relation.
+-- If NFACT is missing, use NUMBER facts.
+-- If NUMBER is missing, use 1999.
+
+function main(arg)
+   if arg[1] then
+      number = arg[1]
+   else
+      number = 1999
    end
-   return ans
+
+   if arg[2] then
+      nfacts = arg[2]
+   else
+      nfacts = number
+   end
+
+   rules()
+   facts(nfacts)
+
+   io.write(string.format("ask odd(%d)? with %d facts\n", number, nfacts))
+   start = os.clock()
+   ask_odd(number)
+   io.write(string.format("CPU time %d sec\n", os.clock() - start))
+end
+
+if arg then
+   return main(arg)
 end
