@@ -551,10 +551,10 @@ end
 The remaining functions in this file implement the tabled logic
 programming algorithm described in "Efficient Top-Down Computation of
 Queries under the Well-Founded Semantics", Chen, W., Swift, T., and
-Warren, D. S., J. Logic Prog. Vol. 24, No. 3, pp. 161-199.  Another
-important reference is "Tabled Evaluation with Delaying for General
-Logic Programs", Chen, W., and Warren, D. S., J. ACM, Vol. 43, No. 1,
-Jan. 1996, pp. 20-74.
+Warren, D. S., J. Logic Prog. Vol. 24, No. 3, Sep. 1995, pp. 161-199.
+Another important reference is "Tabled Evaluation with Delaying for
+General Logic Programs", Chen, W., and Warren, D. S., J. ACM, Vol. 43,
+No. 1, Jan. 1996, pp. 20-74.
 
 ]]
 

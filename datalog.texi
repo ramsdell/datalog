@@ -103,13 +103,13 @@ small deductive database into C programs.  The library uses the tabled
 logic programming algorithm described in ``Efficient Top-Down
 Computation of Queries under the Well-Founded Semantics'', Chen, W.,
 Swift, T., and Warren, D. S., @cite{J. Logic Prog.}, Vol. 24, No. 3,
-pp. 161-199.  Another important reference is ``Tabled Evaluation with
-Delaying for General Logic Programs'', Chen, W., and Warren, D. S.,
-@cite{J. ACM}, Vol. 43, No. 1, Jan. 1996, pp. 20-74.  Datalog is
-described in ``What You Always Wanted to Know About Datalog (And Never
-Dared to Ask)'', Stefano Ceri, Georg Gottlob, and Letizia Tanca,
-@cite{IEEE Transactions of Knowledge and Data Engineering}, Vol. 1,
-No. 1, March 1989.
+Sep. 1995, pp. 161-199.  Another important reference is ``Tabled
+Evaluation with Delaying for General Logic Programs'', Chen, W., and
+Warren, D. S., @cite{J. ACM}, Vol. 43, No. 1, Jan. 1996, pp. 20-74.
+Datalog is described in ``What You Always Wanted to Know About Datalog
+(And Never Dared to Ask)'', Stefano Ceri, Georg Gottlob, and Letizia
+Tanca, @cite{IEEE Transactions of Knowledge and Data Engineering},
+Vol. 1, No. 1, March 1989.
 
 @node    Tutorial, Interpreter, Introduction, Top
 @chapter Tutorial
