@@ -538,10 +538,10 @@ typically ends with @file{share/datalog/datalog.lua}.  The section
 with a comment containing the words ``PRIMITIVES'' is relevant.
 
 @cindex @code{add_iter_prim}, @code{datalog} function
-@cindex @code{datalog}, Lua package
+@cindex @code{datalog}, Lua module
 There is good support for the case in which a primitive can be defined
 in terms of a Lua iterator.  The file @file{datalog.lua} defines the
-@code{datalog} package, and it contains the function
+@code{datalog} module, and it contains the function
 @code{add_iter_prim}.  This function defines a primitive when given a
 predicate symbol, its arity, and an iterator.
 
@@ -648,7 +648,8 @@ end
 
 The Datalog library makes the services provided by a Datalog
 interpreter available to C programs as a set of C functions and types.
-The interface is declared in the header file @file{datalog.h}.
+The interface is declared in the header file @file{datalog.h}.  The
+header file contains useful comments.
 
 @cindex @code{dl_db_t}, library type
 The state of a Datalog interpreter is maintained by a dynamically
@@ -679,76 +680,137 @@ returned by @code{dl_version}.
 const char* dl_version(void);
 @end example
 
-@section Loading
+@section Asserting
 
-The loader reads a Datalog program.  A program is a sequence of zero
-or more assertions or retractions, followed by an optional query
-expressed as a literal.  While reading, the loader performs the
-assertions and retractions requested by the program.  It finishes by
-pushing the query literal on the Datalog interpreter's stack.  If no
-query is specified, it pushes a literal known to have no answers.
+There are two ways to build literals and clauses, and assert and
+retract clauses.  This section describes the low-level interface.  It
+builds items by pushing each of its component on a stack, and then
+inserting it into the result.  The high-level Datalog program loader
+is described later.
 
-The loader obtains buffers containing characters by calling a
-function given to it of type @code{dl_reader_t}.
+The remaining int returning functions in this interface return zero on
+success, unless othewise noted.  The maximum size of the stack
+manipulated by the functions is four, but implementations may provide
+a larger stack.
 
-@cindex @code{dl_reader_t}, library type
+@subsection Strings
+
+Push a string on the top of the stack.  The string may contain zeros.
+
+@cindex @code{dl_pushlstring}, library function
 @example
-typedef const char *(*dl_reader_t)(void *data, size_t *size);
+int dl_pushlstring(dl_db_t db, const char *s, size_t n);
 @end example
 
-When called by the loader, the reader is given the data supplied to
-the loader as its first argument.  If there is no more input
-available, the reader returns a null pointer, otherwise it assigns the
-size of the buffer to the @code{size} parameter, and then returns a
-pointer to the buffer.
+Push a string on the top of the stack.  The string must be zero
+terminated.
 
-The loader reports errors by calling a function given to it of type
-@code{dl_loaderror_t}.
-
-@cindex @code{dl_loaderror_t}, library type
+@cindex @code{dl_pushstring}, library function
 @example
-typedef void (*dl_loaderror_t)(void *data, int lineno,
-                               int colno, const char *msg);
+int dl_pushstring(dl_db_t db, const char *s);
 @end example
 
-When a loader error occurs, the loader calls this function with the
-data supplied to the loader, the location of the error as a line
-number and column number, and an error message.
+Concatenate two strings.  Pops two strings off the top of the stack
+and then pushes the concatenation of the two strings on the top of the
+stack.
 
-@cindex @code{dl_load}, library function
+@cindex @code{dl_concat}, library function
 @example
-int dl_load(dl_db_t database, dl_reader_t reader,
-            dl_loaderror_t loaderror, void *data);
+int dl_concat(dl_db_t db);
 @end example
 
-This function loads a Datalog program.  It uses a reader to obtain a
-sequence of buffers that contain the program.  The load error reporter
-is called when the loader detects an error, and then a non-zero value
-is returned, otherwise, the loader returns zero.  The value in the
-data parameter is passed to both of the supplied functions whenever
-they are called.
+@subsection Literals
 
-Upon success, the loader leaves a literal on the Datalog interpreter's
-stack.  To ignore this literal, call @code{dl_pop}.
+Start a literal.  Pushes an incompleted literal on the top of the
+stack.
 
-@cindex @code{dl_pop}, library function
+@cindex @code{dl_pushliteral}, library function
 @example
-int dl_pop(dl_db_t db);
+int dl_pushliteral(dl_db_t db);
 @end example
 
-The @code{dl_loadbuffer} function loads a Datalog program contained in
-one buffer.
+Make a string and then use this to add a predicate symbol to a
+literal.  Pops the string from stack.  For each literal, this must be
+done once, and can be done after some number of terms have been added.
 
-@cindex @code{dl_loadbuffer}, library function
+@cindex @code{dl_addpred}, library function
 @example
-int dl_loadbuffer(dl_db_t database, const char *buffer,
-                  size_t size, dl_loaderror_t loaderror);
+int dl_addpred(dl_db_t db);
+@end example
+
+Make a string and then use this to add a variable to the list of terms
+of a literal.  Pops the string from stack.
+
+@cindex @code{dl_addvar}, library function
+@example
+int dl_addvar(dl_db_t db);
+@end example
+
+Make a string and then use this to add a constant to the list of terms
+of a literal.  Pops the string from stack.
+
+@cindex @code{dl_addconst}, library function
+@example
+int dl_addconst(dl_db_t db);
+@end example
+
+Finish making a literal after adding all terms and one predicate
+   symbol.  Leaves a completed literal on the top of the stack.
+
+@cindex @code{dl_makeliteral}, library function
+@example
+int dl_makeliteral(dl_db_t db);
+@end example
+
+@subsection Clauses
+
+Make a literal and then use this to start a clause.  Pops a literal
+from the stack and leaves a newly created, incomplete clause on top of
+the stack.  The head of the clause is the literal.
+
+@cindex @code{dl_pushhead}, library function
+@example
+int dl_pushhead(dl_db_t db);
+@end example
+
+Make a literal and then use this to add it to the clause's body.  Pops
+a literal from the stack, and inserts it into the incomplete clause on
+the top of the stack.
+
+@cindex @code{dl_addliteral}, library function
+@example
+int dl_addliteral(dl_db_t db);
+@end example
+
+Finish the clause.  Leaves a completed clause on the top of the stack.
+
+@cindex @code{dl_makeclause}, library function
+@example
+int dl_makeclause(dl_db_t db);
+@end example
+
+@subsection Actions
+
+Asserts the clause on the top of the stack.  The clause is added to
+the database and popped off the stack.  Returns -1 when a clause is
+not safe.
+
+@cindex @code{dl_assert}, library function
+@example
+int dl_assert(dl_db_t db);
+@end example
+
+Retracts the clause on the top of the stack.  The clause is removed
+from the database and popped off the stack.
+
+@cindex @code{dl_retract}, library function
+@example
+int dl_retract(dl_db_t db);
 @end example
 
 @section Querying
 
-The literal left on the stack by the loader can be used to query the
-database.
+A literal on the stack can be used to query the database.
 
 @cindex @code{dl_ask}, library function
 @example
@@ -865,6 +927,72 @@ size_t dl_widthofconst(const char *s);
 @end example
 
 Determine the columns needed for a zero terminated constant.
+
+@section Loading
+
+The loader reads a Datalog program.  A program is a sequence of zero
+or more assertions or retractions, followed by an optional query
+expressed as a literal.  While reading, the loader performs the
+assertions and retractions requested by the program.  It finishes by
+pushing the query literal on the Datalog interpreter's stack.  If no
+query is specified, it pushes a literal known to have no answers.
+
+The loader obtains buffers containing characters by calling a
+function given to it of type @code{dl_reader_t}.
+
+@cindex @code{dl_reader_t}, library type
+@example
+typedef const char *(*dl_reader_t)(void *data, size_t *size);
+@end example
+
+When called by the loader, the reader is given the data supplied to
+the loader as its first argument.  If there is no more input
+available, the reader returns a null pointer, otherwise it assigns the
+size of the buffer to the @code{size} parameter, and then returns a
+pointer to the buffer.
+
+The loader reports errors by calling a function given to it of type
+@code{dl_loaderror_t}.
+
+@cindex @code{dl_loaderror_t}, library type
+@example
+typedef void (*dl_loaderror_t)(void *data, int lineno,
+                               int colno, const char *msg);
+@end example
+
+When a loader error occurs, the loader calls this function with the
+data supplied to the loader, the location of the error as a line
+number and column number, and an error message.
+
+@cindex @code{dl_load}, library function
+@example
+int dl_load(dl_db_t database, dl_reader_t reader,
+            dl_loaderror_t loaderror, void *data);
+@end example
+
+This function loads a Datalog program.  It uses a reader to obtain a
+sequence of buffers that contain the program.  The load error reporter
+is called when the loader detects an error, and then a non-zero value
+is returned, otherwise, the loader returns zero.  The value in the
+data parameter is passed to both of the supplied functions whenever
+they are called.
+
+Upon success, the loader leaves a literal on the Datalog interpreter's
+stack.  To ignore this literal, call @code{dl_pop}.
+
+@cindex @code{dl_pop}, library function
+@example
+int dl_pop(dl_db_t db);
+@end example
+
+The @code{dl_loadbuffer} function loads a Datalog program contained in
+one buffer.
+
+@cindex @code{dl_loadbuffer}, library function
+@example
+int dl_loadbuffer(dl_db_t database, const char *buffer,
+                  size_t size, dl_loaderror_t loaderror);
+@end example
 
 @node Copying, Index, Library, Top
 @appendix Copying the Software

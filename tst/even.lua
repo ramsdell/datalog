@@ -1,6 +1,6 @@
 require "datalog"
 
--- This file shows how to use the datalog package with Lua.  The
+-- This file shows how to use the datalog module with Lua.  The
 -- example demonstrates a rather inefficient way of determining if a
 -- number is odd.
 
@@ -18,11 +18,17 @@ function ask(literal)
    if ans then
       for i = 1,#ans do
 	 io.write(ans.name)
-	 for j = 1,ans.arity do
-	    io.write("\t")
-	    io.write(ans[i][j])
+	 if ans.arity > 0 then
+	    io.write("(")
+	    io.write(ans[i][1])
+	    for j = 2,ans.arity do
+	       io.write(", ")
+	       io.write(ans[i][j])
+	    end
+	    io.write(").\n")
+	 else
+	    io.write(".\n")
 	 end
-	 io.write("\n")
       end
    end
    return ans
