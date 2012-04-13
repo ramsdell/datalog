@@ -72,9 +72,10 @@ This work was supported by the MITRE-Sponsored Research Program.
 * Primitives::                  Predicates implemented by code.
 * Syntax::                      Some language details.
 * Import/Export::               Using tab separated values.
-* Extensions::                  Adding primitive predicates
+* Extensions::                  Adding primitive predicates.
+* Stand-Alone::                 Using the Datalog module in Lua.
 * Library::                     Embedding the Datalog interpreter.
-* Copying::                     Terms for copying the software
+* Copying::                     Terms for copying the software.
 * Index::                       A concept index.
 @end menu
 
@@ -515,7 +516,7 @@ using the @samp{-} option rather than implicitly via standard input.
 Using the @samp{-} option avoids prompt printing and other features of
 the interactive loop.
 
-@node    Extensions, Library, Import/Export, Top
+@node    Extensions, Stand-Alone, Import/Export, Top
 @chapter Extensions
 
 @cindex Lua
@@ -643,7 +644,13 @@ local function add(literal)
 end
 @end group
 @end example
-@node    Library, Copying, Extensions, Top
+
+@node    Stand-Alone, Library, Extensions, Top
+@chapter Stand-Alone
+
+The Datalog module can be used by the stand-alone Lua interpreter.
+
+@node    Library, Copying, Stand-Alone, Top
 @chapter Library
 
 The Datalog library makes the services provided by a Datalog
