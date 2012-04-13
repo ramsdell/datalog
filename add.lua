@@ -15,14 +15,13 @@ local function add(literal)
                       return nil
                    end
 		elseif x:is_const() and z:is_const() then
-                   local i = tonumber(y.id)
+                   local i = tonumber(x.id)
                    local k = tonumber(z.id)
                    if i and k then
                       return {i, i - k, k}
                    else
                       return nil
                    end
-		   return {x.id, x.id - z.id, z.id}
 		elseif x:is_const() and y:is_const() then
                    local i = tonumber(x.id)
                    local j = tonumber(y.id)
