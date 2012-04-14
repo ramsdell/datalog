@@ -355,8 +355,8 @@ identifiers, but the hyphen character is allowed.
 
 @cindex strings, token class
 A string is a sequence of characters enclosed in double quotes.
-Characters other than double quote, newline, and backslash may be
-directly included in a string.  The remaining characters may be
+Characters other than double quote, newline, and backslash can be
+directly included in a string.  The remaining characters can be
 specified using escape characters, @samp{\"}, @samp{\n}, and @samp{\\}
 respectively.
 
@@ -554,6 +554,7 @@ the arity of the predicate.
 What follows is a predicate defined by an iterator that produces one
 answer, and the answer has one element in it---the number three.
 
+@cindex @code{three}, primitive
 @example
 @group
 local function all_threes(literal)
@@ -571,6 +572,7 @@ datalog.add_iter_prim("three", 1, all_threes)
 This primitive for addition shows how to ask if term @code{t} is a
 constant via the construct @code{t:is_const()}.
 
+@cindex @code{add}, primitive
 @example
 @group
 local function add(literal)
@@ -601,6 +603,7 @@ The above primitive fails when given a non-numeric argument.  A more
 robust implementation of the predicate ensures that arguments are
 numbers before performing arithmetic.
 
+@cindex @code{add}, primitive with type checking
 @example
 @group
 local function add(literal)
@@ -649,6 +652,110 @@ end
 @chapter Stand-Alone
 
 The Datalog module can be used by the stand-alone Lua interpreter.
+Load it with
+
+@example
+require "datalog"
+@end example
+
+In the remainder of this chapter, a use of the Datalog module is
+demonstrated by translating the following Datalog program into Lua.
+
+@example
+@group
+q(X) :- p(X).
+q(a).
+p(X) :- q(X).
+q(X)?
+@end group
+@end example
+
+Abbreviations make the code more readable.
+
+@example
+@group
+mv = datalog.make_var
+mc = datalog.make_const
+ml = datalog.make_literal
+mr = datalog.make_clause
+@end group
+@end example
+
+A translation of @code{q(X) :- p(X).}
+
+@example
+@group
+do
+   local head = ml("q", @{mv("X")@})
+   local body = @{ml("p", @{mv("X")@})@}
+   datalog.assert(mr(head, body))
+end
+@end group
+@end example
+
+A translation of @code{q(a).}
+
+@example
+@group
+do
+   local head = ml("q", @{mc("a")@})
+   datalog.assert(mr(head, @{@}))
+end
+@end group
+@end example
+
+A translation of @code{p(X) :- q(X).}
+
+@example
+@group
+do
+   local head = ml("p", @{mv("X")@})
+   local body = @{ml("q", @{mv("X")@})@}
+   datalog.assert(mr(head, body))
+end
+@end group
+@end example
+
+Given a literal, the @code{ask} function uses it as a Datalog query
+and then prints the answers.
+
+@cindex @code{ask}, Lua function
+@example
+@group
+function ask(literal)
+   local ans = datalog.ask(literal)
+   if ans then
+      for i = 1,#ans do
+         io.write(ans.name)
+         if ans.arity > 0 then
+            io.write("(")
+            io.write(ans[i][1])
+            for j = 2,ans.arity do
+               io.write(", ")
+               io.write(ans[i][j])
+            end
+            io.write(").\n")
+         else
+            io.write(".\n")
+         end
+      end
+   end
+   return ans
+end
+@end group
+@end example
+
+A translation of the query @code{q(X)?}
+
+@example
+ask(ml("q", @{mv("X")@}))
+@end example
+
+The answer printed.
+
+@example
+q(a).
+@end example
 
 @node    Library, Copying, Stand-Alone, Top
 @chapter Library
