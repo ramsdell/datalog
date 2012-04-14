@@ -126,18 +126,17 @@ end
 -- Asks even(NUMBER) or asks even(1999) by default.
 
 function main(arg)
+   local number = 2000
    if arg[1] then
       number = arg[1]
-   else
-      number = 2000
    end
    rules()
    prim()
 
    io.write(string.format("even(%d)?\n", number))
-   start = os.clock()
+   -- local start = os.clock()
    ask_even(number)
-   io.write(string.format("CPU time %d sec\n", os.clock() - start))
+   -- io.write(string.format("CPU time %d sec\n", os.clock() - start))
 end
 
 if arg then
