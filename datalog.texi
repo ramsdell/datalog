@@ -630,7 +630,6 @@ local function add(literal)
                    else
                       return nil
                    end
-                   return @{x.id, x.id - z.id, z.id@}
                 elseif x:is_const() and y:is_const() then
                    local i = tonumber(x.id)
                    local j = tonumber(y.id)
