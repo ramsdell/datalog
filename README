@@ -17,6 +17,9 @@ interpreter into C programs.
 
 INSTALLATION
 
+Install using the usual "./configure; make; make install" sequence as
+described in the file INSTALL.
+
 If you have Lua 5.2 installed, configure with the --with-lua option.
 On Debian-based systems, use:
 
