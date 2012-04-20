@@ -7,6 +7,10 @@ DATALOG NEWS -- history of user-visible changes.
    interpreter was added along with a section in the Library chapter
    on making assertions via the C API.
 
+** Space added to the prompt
+   A space character was added to the prompt.  The space character was
+   inadvertently deleted when readline support was added.
+
 * Changes in version 2.1
 
 ** Bugs introduced with the addition of GNU readline fixed
