@@ -1,5 +1,8 @@
 2012-04-13  John D. Ramsdell  <ramsdell@mitre.org>
 
+	* datalog.texi (Stand-Alone):  Added a chapter on using the
+	datalog module in the stand-alone Lua interpreter.
+
 	* datalog.texi (Library):  Added a section on making assertions via
 	the C API.
 
