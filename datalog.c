@@ -56,7 +56,7 @@ dl_lua(dl_db_t L)
     if (s)
       fprintf(stderr, "%s\n", s);
     else
-      fprintf(stderr, "no error message available\n", s);
+      fprintf(stderr, "no error message available\n");
     lua_pop(L, 1);
     return i;
   }

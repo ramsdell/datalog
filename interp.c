@@ -237,7 +237,7 @@ getaline(void *data, size_t *size)
   linebuffer_t *lb = (linebuffer_t *)data;
   char *buf;
   int nofiles = lb->again;
-  char *prompt = lb->again ? ">>" : ">";
+  char *prompt = lb->again ? ">> " : "> ";
   FILE *in;
   size_t n;
   if (lb->done)		     /* We're done, so return end of input. */
