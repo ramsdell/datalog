@@ -331,8 +331,10 @@ pushstring(loader_t *l, int s0, int last, const char *s, size_t n)
 #endif
   char *b = buf;   /* Points to the place to add the next character */
   int i;
+#if !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
   if (!buf)
     err(l, "memory exhausted");
+#endif
   for (; s < end; s++) {
     int ch = *s;		/* For each item in source string. */
     if (s0 == SEEN_NOTHING) {	/* Dispatch based on state. */
