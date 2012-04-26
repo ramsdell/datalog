@@ -1,3 +1,7 @@
+2012-04-26  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* git: Tagged as datalog-2.2 with tag v2.2.
+
 2012-04-20  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* interp.c (getaline): Added a space to the prompt.  The space was
