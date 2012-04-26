@@ -34,7 +34,7 @@ that can be used to embed the interpreter into C programs.
 Summary: Datalog header file and library
 License: LGPLv2+
 Group: Development/Libraries
-Requires: libdatalog = %{version}
+Requires: datalog = %{version}
 
 %description devel 
 This package includes the header file and library that can be used to
@@ -88,6 +88,9 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
+* Thu Apr 26 2012 John D. Ramsdell <ramsdell@gootoo.mitre.org> - 2.2-1
+- Changed devel requires from libdatalog to datalog
+
 * Sun Apr  8 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.1-1
 - Added AUTHORS and NEWS to %%doc
 

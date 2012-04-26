@@ -26,3 +26,15 @@ On Debian-based systems, use:
     $ ./configure --with-lua-suffix=5.2 CPPFLAGS=-I/usr/include/lua5.2
 
 Datalog can be built on top of Lua 5.1 too.
+
+DOCUMENTATION
+
+This package is documented using Texinfo and a manual page.  The NEWS
+file contains a history of user-visible changes.  The ChangeLog
+records changes to the package.
+
+TEST SUITE
+
+The source distribution contains examples of Datalog programs used for
+testing that are not installed.  Examples from the Texinfo manual are
+also included.
