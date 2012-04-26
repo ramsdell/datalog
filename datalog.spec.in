@@ -88,7 +88,7 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
-* Thu Apr 26 2012 John D. Ramsdell <ramsdell@gootoo.mitre.org> - 2.2-1
+* Thu Apr 26 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.2-1
 - Changed devel requires from libdatalog to datalog
 
 * Sun Apr  8 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.1-1
