@@ -1,4 +1,4 @@
-require "datalog"
+-- require "datalog"
 
 -- This file shows how to use the datalog module with Lua.  The
 -- example demonstrates a rather inefficient way of determining if a
@@ -151,7 +151,8 @@ function main(arg)
    end
 
    rules()
-   facts(nfacts)
+   -- facts(nfacts)
+   prims()
 
    io.write(string.format("ask odd(%d)? with %d facts\n", number, nfacts))
    start = os.clock()

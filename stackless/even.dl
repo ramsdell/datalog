@@ -1,4 +1,0 @@
-even(N) :- N = 0.
-even(N) :- succ(N, M), odd(M).
-odd(N) :- succ(N, M), even(M).
-odd(1999)?

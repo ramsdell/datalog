@@ -1,22 +1,19 @@
-all:	succ.dl
+all:
 	@echo
 	@echo '*******'
-	@echo Use succ implemented as a database table
-	wc succ.dl
-	tail -3 succ.dl
-	cat even.dl
+	@echo Use stackless datalog
 	@echo Run datalog
-	cat succ.dl even.dl | time -p ../datalog -
+	time -p lua -l datalog even.lua 3045
 	@echo
 	@echo '*******'
-	@echo Use succ implemented a primitive
-	cat succ.lua
+	@echo Use standard datalog
+	cd ..; time -p lua -l datalog stackless/even.lua 3045
+	@echo
+	@echo '*******'
+	@echo Use stackless datalog
 	@echo Run datalog
-	time -p ../datalog -l succ.lua even.dl
-
-clean:
-	-rm succ.dl
-
-succ.dl:	succ.awk
-	awk -f succ.awk > succ.dl
-
+	time -p lua -l datalog even.lua 6045
+	@echo
+	@echo '*******'
+	@echo Use standard datalog
+	cd ..; time -p lua -l datalog stackless/even.lua 6045

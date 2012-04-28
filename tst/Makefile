@@ -19,4 +19,3 @@ clean:
 
 succ.dl:	succ.awk
 	awk -f succ.awk > succ.dl
-
