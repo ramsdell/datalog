@@ -5,6 +5,14 @@
 A small Datalog interpreter written in Lua designed to be used via a
 simple C API.
 
+This version uses a small, bounded amount of runtime stack space so
+that deep queries do not cause a Lua stack exhaustion exception.  It
+does so by keeping the information that was on the stack in a table of
+thunks (zero arity functions).  In exchange for protection against
+stack exhaustion exception, there is a performance penalty.  Plus,
+there is currently no limit on the size of the table of thunks, so a
+very deep query will fail by exhausting the Lua heap.
+
 John D. Ramsdell
 Copyright (C) 2004 The MITRE Corporation
 
@@ -606,6 +614,9 @@ end
 
 -- A stack of thunks used to delay the evaluation of some expressions
 
+-- The use of thunks protects the search for answers from exhausting
+-- the Lua stack.  The cost of using thunks is performance.
+
 local tasks
 
 -- Schedule a task for later invocation
@@ -629,6 +640,9 @@ local function invoke(thunk)
    tasks = nil
 end
 
+-- Thunks are created and stored in the stack in functions fact and
+-- rule.
+
 -- Store a fact, and inform all waiters of the fact too.
 
 local fact, rule, add_clause, search
@@ -640,6 +654,7 @@ function fact(subgoal, literal)
 	 local waiter = subgoal.waiters[i]
 	 local resolvent = resolve(waiter.clause, literal)
 	 if resolvent then
+	    -- Delayed call to add_clause
 	    sched(function () add_clause(waiter.subgoal, resolvent) end)
 	 end
       end
@@ -660,12 +675,14 @@ function rule(subgoal, clause, selected)
 	 end
       end
       for i=1,#todo do
+	 -- Delayed call to add_clause
 	 sched(function () add_clause(subgoal, todo[i]) end)
       end
    else
       sg = make_subgoal(selected)
       table.insert(sg.waiters, {subgoal = subgoal, clause = clause})
       merge(sg)
+      -- Delayed call to search
       return sched(function () search(sg) end)
    end
 end
