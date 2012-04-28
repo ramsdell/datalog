@@ -32,4 +32,4 @@ AM_MAKEINFOHTMLFLAGS = --no-split
 EXTRA_DIST = datalog.html try.sh ancestor.dl ancestor.txt bidipath.dl	\
 bidipath.txt laps.dl laps.txt long.dl long.txt path.dl path.txt pq.dl	\
 pq.txt revpath.dl revpath.txt tc.dl tc.txt true.dl true.txt says.dl	\
-says.txt octal.dl octal.txt add.lua pq.lua even.lua
+says.txt octal.dl octal.txt add.lua pq.lua even.lua stackless.diff

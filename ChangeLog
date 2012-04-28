@@ -1,3 +1,10 @@
+2012-04-28  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* stackless.diff:  Added a patch that prevents Lua stack
+	exhaustion when evaluating deep queries.  It does so by moving
+	Datalog search control information from the Lua stack into a table
+	of thunks.
+
 2012-04-26  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* git: Tagged as datalog-2.2 with tag v2.2.
