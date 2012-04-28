@@ -348,6 +348,8 @@ pushstring(loader_t *l, int s0, int last, const char *s, size_t n)
     else if (s0 == SEEN_SLASH) {
       if (isodigit(ch))
 	s0 = toint(ch);
+      else if (ch == 'x')
+	err(l, "hexadecimal escape sequence in string");
       else {
 	if (ch != '\n')		/* If ch is \n, do nothing. */
 	  *b++ = toescape(ch);

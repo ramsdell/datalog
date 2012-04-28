@@ -1,5 +1,8 @@
 2012-04-28  John D. Ramsdell  <ramsdell@mitre.org>
 
+	* loader.c (pushstring): Added a check for hexadecimal escape
+	sequences in strings.  An error is signaled when one is found.
+
 	* stackless.diff:  Added a patch that prevents Lua stack
 	exhaustion when evaluating deep queries.  It does so by moving
 	Datalog search control information from the Lua stack into a table
