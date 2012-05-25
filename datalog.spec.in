@@ -1,5 +1,5 @@
-%{!?luaver: %define luaver %(lua -e "print(string.sub(_VERSION, 5))")}
-%define	luapkgdir %{_datadir}/lua/%{luaver}
+%{!?luaver: %global luaver %(lua -e "print(string.sub(_VERSION, 5))")}
+%global	luapkgdir %{_datadir}/lua/%{luaver}
 
 Name:		@PACKAGE@
 Version:	@VERSION@
@@ -88,6 +88,9 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
+* Fri May 25 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.2-2
+- Changed %%define to %%global
+
 * Thu Apr 26 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.2-1
 - Changed devel requires from libdatalog to datalog
 
