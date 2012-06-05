@@ -12,7 +12,9 @@ BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root
 
 Summary:	A Lightweight Deductive Database using Datalog
 License:	LGPLv2+
+%if 0%{?rhel}
 Group:		Applications/Databases
+%endif
 
 BuildRequires:	texinfo, lua-devel < 5.3
 
@@ -32,8 +34,9 @@ that can be used to embed the interpreter into C programs.
 
 %package devel 
 Summary: Datalog header file and library
-License: LGPLv2+
+%if 0%{?rhel}
 Group: Development/Libraries
+%endif
 Requires: datalog = %{version}
 
 %description devel 
@@ -48,7 +51,6 @@ embed a datalog interpreter into C programs.
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
 mkdir -p %{buildroot}%{luapkgdir}
 install -m 644 %{name}.lua %{buildroot}%{luapkgdir}
@@ -88,6 +90,11 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
+* Tue Jun  5 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.2-3
+- Removed rm of build root in %%install
+- Group field defined only for RHEL
+- Removed license field in subpackage devel
+
 * Fri May 25 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.2-2
 - Changed %%define to %%global
 
