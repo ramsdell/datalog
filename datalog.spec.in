@@ -18,6 +18,8 @@ Group:		Applications/Databases
 
 BuildRequires:	texinfo, lua-devel < 5.3
 
+Requires:	lua(abi) = %{luaver}
+
 %description
 This package contains a lightweight deductive database system.
 Queries and database updates are expressed using Datalog--a
@@ -32,14 +34,14 @@ memory constrained devices.  The package includes an interactive
 interpreter for Datalog, and the development package has a library
 that can be used to embed the interpreter into C programs.
 
-%package devel 
+%package devel
 Summary: Datalog header file and library
 %if 0%{?rhel}
 Group: Development/Libraries
 %endif
 Requires: datalog = %{version}
 
-%description devel 
+%description devel
 This package includes the header file and library that can be used to
 embed a datalog interpreter into C programs.
 
@@ -90,6 +92,9 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
+* Thu Jun  7 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.2-4
+- Added lua(abi) requirement
+
 * Tue Jun  5 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.2-3
 - Removed rm of build root in %%install
 - Group field defined only for RHEL
