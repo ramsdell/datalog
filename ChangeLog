@@ -1,3 +1,7 @@
+2012-09-29  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* git: Tagged as datalog-2.3 with tag v2.3.
+
 2012-04-28  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* loader.c (pushstring): Added a check for hexadecimal escape
