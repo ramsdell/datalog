@@ -18,8 +18,6 @@ Group:		Applications/Databases
 
 BuildRequires:	texinfo, lua-devel < 5.3
 
-Requires:	lua(abi) = %{luaver}
-
 %description
 This package contains a lightweight deductive database system.
 Queries and database updates are expressed using Datalog--a
@@ -92,6 +90,9 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
+* Mon Oct 22 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.3-2
+- Remove lua(api) requirement
+
 * Thu Jun  7 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.2-4
 - Added lua(abi) requirement
 
