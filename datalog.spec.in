@@ -90,6 +90,9 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Mon Oct 22 2012 John D. Ramsdell <ramsdell@mitre.org> - 2.3-2
 - Remove lua(api) requirement
 
