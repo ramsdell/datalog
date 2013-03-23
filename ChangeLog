@@ -1,3 +1,10 @@
+2013-03-23  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* config.guess, config.sub: Distribution rebuild to support the
+	ARM 64 bit CPU architecture (aarch64).
+
+	* git: Tagged as datalog-2.4 with tag v2.4.
+
 2012-09-29  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* git: Tagged as datalog-2.3 with tag v2.3.
