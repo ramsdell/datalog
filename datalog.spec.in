@@ -90,6 +90,9 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
+* Wed Mar 27 2013 John D. Ramsdell <ramsdell@mitre.org> - 2.4-1
+- Add support for ARM 64 bit CPU architecture (aarch64)
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
