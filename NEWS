@@ -1,5 +1,10 @@
 DATALOG NEWS -- history of user-visible changes.
 
+* Changes in version 2.5
+
+  There are no user-visible changes.  The version of Lua has been
+  updated to 5.3.0.
+
 * Changes in version 2.2
 
 ** Better documentation
