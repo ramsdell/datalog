@@ -162,5 +162,5 @@ fi
 - Removed asterisks in %%files
 - Added COPYING.LIB
 
-* Tue Jul 7 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.4-1
+* Thu Jul 7 2011 John D. Ramsdell <ramsdell@mitre.org> - 1.4-1
 - Initial spec release
