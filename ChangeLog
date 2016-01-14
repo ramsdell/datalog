@@ -5,6 +5,13 @@
 
 	* configure.ac: Added luaconf.h to checked header list.
 
+2015-04-28  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* datalog.spec.in: Updated changelog and changed build requires to
+	lua > 5.1.
+
+	* git: Tagged as datalog-2.5 with tag v2.5.
+
 2015-04-27  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* lua/*: Updated Lua sources to version 5.3.0.
