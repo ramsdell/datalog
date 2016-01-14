@@ -32,7 +32,7 @@ AC_ARG_WITH([lua],
 # Look for correct version of installed Lua
 # when --with-lua is not no or --with-lua-suffix is defined.
 if test "x$with_lua" != xno -o -n "$with_lua_suffix" ; then
-  AC_CHECK_HEADERS([lua.h lualib.h lauxlib.h],
+  AC_CHECK_HEADERS([lua.h lualib.h lauxlib.h luaconf.h],
                    [], AC_MSG_FAILURE([lua header not found]))
   AX_LUA_HEADERS_VERSION([501], [503])
   AC_SEARCH_LIBS([lua_pushboolean], [lua$with_lua_suffix],

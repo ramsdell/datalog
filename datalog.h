@@ -32,6 +32,9 @@ extern "C"
 #define DATALOG_API extern
 #endif
 
+#include <stdio.h>
+#include <lua.h>
+
 /* The object manipulated by functions in the API. */
 typedef lua_State *dl_db_t;
 
