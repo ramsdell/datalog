@@ -1,3 +1,8 @@
+2016-02-07  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* datalog.texi (Library): Added a description of dl_mark and
+	dl_reset.
+
 2016-01-14  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* datalog.h: Included stdio.h and lua.h so that datalog.h

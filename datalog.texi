@@ -1107,6 +1107,29 @@ int dl_loadbuffer(dl_db_t database, const char *buffer,
                   size_t size, dl_loaderror_t loaderror);
 @end example
 
+@section Stack Height Adjusting
+
+The height of the stack can be saved, and then later reset to the saved
+height.  This is useful when errors occur, as it makes it easy to
+remove pushed values without keeping track of how many values remain
+on the stack.
+
+The height of the stack is obtained with @code{dl_mark}.  For this
+function, the return value does not indicate success or failure.
+
+@cindex @code{dl_mark}, library function
+@example
+int dl_mark(dl_db_t db);
+@end example
+
+The height of the stack is reset to a value returned by @code{dl_mark}
+using @code{dl_reset}.
+
+@cindex @code{dl_reset}, library function
+@example
+int dl_reset(dl_db_t db, int m);
+@end example
+
 @node Copying, Index, Library, Top
 @appendix Copying the Software
 
