@@ -1,5 +1,14 @@
 DATALOG NEWS -- history of user-visible changes.
 
+* Changes in version 2.6
+
+** Better documentation
+   Functions dl_mark and dl_reset are now documented.
+
+** Header file compile
+   To aid autotool users, stdio.h and lua.h are now included in
+   datalog.h so that it compiles.
+
 * Changes in version 2.5
 
   There are no user-visible changes.  The version of Lua has been
