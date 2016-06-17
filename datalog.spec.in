@@ -16,7 +16,7 @@ License:	LGPLv2+
 Group:		Applications/Databases
 %endif
 
-BuildRequires:	texinfo, lua-devel > 5.1
+BuildRequires:	texinfo, lua-devel > 5.1, readline-devel
 
 %description
 This package contains a lightweight deductive database system.
@@ -90,6 +90,18 @@ fi
 %{_libdir}/lib%{name}.so
 
 %changelog
+* Fri Jun 17 2016 John D. Ramsdell <ramsdell@mitre.org> - 2.6-2
+- Enabled readline support
+
+* Thu Jun 02 2016 John D. Ramsdell <ramsdell@mitre.org> - 2.6-1
+- Made header compilable and documented dl_mark and dl_reset
+
+* Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Tue Apr 28 2015 John D. Ramsdell <ramsdell@mitre.org> - 2.5-1
 - Updated Lua sources to version 5.3.0
 
