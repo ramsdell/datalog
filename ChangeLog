@@ -1,3 +1,7 @@
+2016-06-24  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* configure.ac: Added missing AC_ARG_WITH([lua_suffix],...)
+
 2016-06-01  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* git: Tagged as datalog-2.6 with tag v2.6.
