@@ -29,6 +29,10 @@ AC_ARG_WITH([lua],
   [],
   [with_lua=no])
 
+AC_ARG_WITH([lua_suffix],
+  [AS_HELP_STRING([--with-lua_suffix],
+    [use installed lua package with given suffix])])
+
 # Look for Lua headers and libraries when --with-lua is not no or
 # --with-lua-suffix is defined.
 if test "x$with_lua" != xno -o -n "$with_lua_suffix" ; then
