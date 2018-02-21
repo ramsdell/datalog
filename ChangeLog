@@ -1,3 +1,7 @@
+2018-02-21  John D. Ramsdell  <ramsdell@mitre.org>
+
+	* datalog.spec.in: Added gcc to BuildRequires.
+
 2016-06-01  John D. Ramsdell  <ramsdell@mitre.org>
 
 	* git: Tagged as datalog-2.6 with tag v2.6.

@@ -16,7 +16,7 @@ License:	LGPLv2+
 Group:		Applications/Databases
 %endif
 
-BuildRequires:	texinfo, lua-devel > 5.1
+BuildRequires:	gcc, texinfo, lua-devel > 5.1
 
 %description
 This package contains a lightweight deductive database system.
