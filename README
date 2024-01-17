@@ -27,6 +27,22 @@ On Debian-based systems, use:
 
 Datalog can be built on top of Lua 5.1 too.
 
+INSTALLATION WITHOUT AUTOTOOLS
+
+1. Install Lua.  On a mac try:
+
+    $ brew install lua
+
+2. Create dl_lua.h.
+
+    $ cc -o bin2c bin2c.c
+    $ cp datalog.lua.in datalog.lua
+    $ ./bin2c -o dl_lua.h datalog.lua
+
+3. Create datalog binary.
+
+    $ cc -O -o datalog -I. -Ilua interp.c loader.c datalog.c -l lua
+
 DOCUMENTATION
 
 This package is documented using Texinfo and a manual page.  The NEWS
