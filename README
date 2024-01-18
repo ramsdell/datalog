@@ -15,7 +15,7 @@ memory constrained devices.  The package includes an interactive
 interpreter for Datalog, and a library that can be used to embed the
 interpreter into C programs.
 
-INSTALLATION
+INSTALLATION FROM A DISTRIBUTION
 
 Install using the usual "./configure; make; make install" sequence as
 described in the file INSTALL.
@@ -26,6 +26,11 @@ On Debian-based systems, use:
     $ ./configure --with-lua-suffix=5.2 CPPFLAGS=-I/usr/include/lua5.2
 
 Datalog can be built on top of Lua 5.1 too.
+
+If your sources are coming from the repository, and not from a
+distribution, you must use autotools to create the configure script.
+In this case, it probably will be easer to use the installation
+without autotools procedure described below.
 
 INSTALLATION WITHOUT AUTOTOOLS
 
@@ -42,6 +47,10 @@ INSTALLATION WITHOUT AUTOTOOLS
 3. Create datalog binary.
 
     $ cc -O -o datalog -I. -Ilua interp.c loader.c datalog.c -l lua
+
+    Some systems place liblua in a place not known by the C compiler.
+    In that case, add the -L switch to tell the C compiler its
+    location.
 
 DOCUMENTATION
 
