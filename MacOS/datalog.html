@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.2, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- This manual documents Datalog version 2.6, a lightweight
+deductive database system.
+
+Copyright © 2004 The MITRE Corporation.
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Lesser General Public License as published
+by the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.  The terms are contained in the
+file COPYING.LIB in the source distribution of the software, or
+at http://www.gnu.org/licenses/lgpl.txt. -->
+<title>Datalog User Manual</title>
+
+<meta name="description" content="Datalog User Manual">
+<meta name="keywords" content="Datalog User Manual">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="makeinfo">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="#Top" rel="start" title="Top">
+<link href="#Index" rel="index" title="Index">
+<link href="#Introduction" rel="next" title="Introduction">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+a.summary-letter-printindex {text-decoration: none}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+td.printindex-index-entry {vertical-align: top}
+td.printindex-index-section {vertical-align: top; padding-left: 1em}
+th.entries-header-printindex {text-align:left}
+th.sections-header-printindex {text-align:left; padding-left: 1em}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+
+
+
+
+
+
+
+
+
+<div class="top-level-extent" id="Top">
+<div class="nav-panel">
+<p>
+Next: <a href="#Introduction" accesskey="n" rel="next">Introduction</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<p>This manual documents Datalog version 2.6, a lightweight
+deductive database system.
+</p>
+<p>Copyright &copy; 2004 The MITRE Corporation.
+</p>
+<blockquote class="quotation">
+<p>Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Lesser General Public License as published
+by the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.  The terms are contained in the
+file <samp class="file">COPYING.LIB</samp> in the source distribution of the software, or
+at <a class="uref" href="http://www.gnu.org/licenses/lgpl.txt">http://www.gnu.org/licenses/lgpl.txt</a>.
+</p></blockquote>
+<h1 class="top" id="Contents"><span>Contents<a class="copiable-link" href="#Contents"> &para;</a></span></h1>
+
+
+
+<p>The software described in this manual was written by John D. Ramsdell
+of The MITRE Corporation.  The work was supported by the
+MITRE-Sponsored Research Program.
+</p>
+<ul class="mini-toc">
+<li><a href="#Introduction" accesskey="1">Introduction</a></li>
+<li><a href="#Tutorial" accesskey="2">Tutorial</a></li>
+<li><a href="#Interpreter" accesskey="3">Interpreter</a></li>
+<li><a href="#Primitives" accesskey="4">Primitive Predicates</a></li>
+<li><a href="#Syntax" accesskey="5">Syntax</a></li>
+<li><a href="#Import_002fExport" accesskey="6">Import/Export</a></li>
+<li><a href="#Extensions" accesskey="7">Extensions</a></li>
+<li><a href="#Stand_002dAlone" accesskey="8">Stand-Alone</a></li>
+<li><a href="#Library" accesskey="9">Library</a></li>
+<li><a href="#Copying">Copying the Software</a></li>
+<li><a href="#Index">Index</a></li>
+</ul>
+<hr>
+<div class="chapter-level-extent" id="Introduction">
+<div class="nav-panel">
+<p>
+Next: <a href="#Tutorial" accesskey="n" rel="next">Tutorial</a>, Previous: <a href="#Top" accesskey="p" rel="prev">Contents</a>, Up: <a href="#Top" accesskey="u" rel="up">Contents</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<h2 class="chapter" id="Introduction-1"><span>1 Introduction<a class="copiable-link" href="#Introduction-1"> &para;</a></span></h2>
+
+<p>The Datalog package contains a lightweight deductive database system.
+Queries and database updates are expressed using Datalog&mdash;a
+declarative logic language in which each formula is a function-free
+Horn clause, and every variable in the head of a clause must appear in
+the body of the clause.  The use of Datalog syntax and an
+implementation based on tabling intermediate results, ensures that all
+queries terminate.
+</p>
+<p>The components in this package are designed to be small, and usable on
+memory constrained devices.  The package includes an interactive
+interpreter for Datalog, and a library that can be employed to embed a
+small deductive database into C programs.  The library uses the tabled
+logic programming algorithm described in &ldquo;Efficient Top-Down
+Computation of Queries under the Well-Founded Semantics&rdquo;, Chen, W.,
+Swift, T., and Warren, D. S., <cite class="cite">J. Logic Prog.</cite>, Vol. 24, No. 3,
+Sep. 1995, pp. 161-199.  Another important reference is &ldquo;Tabled
+Evaluation with Delaying for General Logic Programs&rdquo;, Chen, W., and
+Warren, D. S., <cite class="cite">J. ACM</cite>, Vol. 43, No. 1, Jan. 1996, pp. 20-74.
+Datalog is described in &ldquo;What You Always Wanted to Know About Datalog
+(And Never Dared to Ask)&rdquo;, Stefano Ceri, Georg Gottlob, and Letizia
+Tanca, <cite class="cite">IEEE Transactions of Knowledge and Data Engineering</cite>,
+Vol. 1, No. 1, March 1989.
+</p>
+<hr>
+</div>
+<div class="chapter-level-extent" id="Tutorial">
+<div class="nav-panel">
+<p>
+Next: <a href="#Interpreter" accesskey="n" rel="next">Interpreter</a>, Previous: <a href="#Introduction" accesskey="p" rel="prev">Introduction</a>, Up: <a href="#Top" accesskey="u" rel="up">Contents</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<h2 class="chapter" id="Tutorial-1"><span>2 Tutorial<a class="copiable-link" href="#Tutorial-1"> &para;</a></span></h2>
+
+<p>Datalog is introduced by showing a sequence of interactions with a
+Datalog interpreter.  The interpreter is started with the
+<code class="command">datalog</code> command.
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">$ datalog
+Datalog 2.6
+
+&gt;
+</pre></div></div>
+
+<a class="index-entry-id" id="index-fact_002c-example"></a>
+<p>Facts are stored in tables.  If the name of the table is
+&lsquo;<samp class="samp">parent</samp>&rsquo;, and &lsquo;<samp class="samp">john</samp>&rsquo; is the parent of &lsquo;<samp class="samp">douglas</samp>&rsquo;, store
+the fact in the database with this:
+</p>
+<div class="example">
+<pre class="example-preformatted">&gt; parent(john, douglas).
+</pre></div>
+
+<a class="index-entry-id" id="index-term"></a>
+<p>Each item in the parenthesized list following the name of the table is
+called a <em class="dfn">term</em>.  A term can be either a logical variable or a
+constant.  Thus far, all the terms shown have been constant terms.
+</p>
+<a class="index-entry-id" id="index-query"></a>
+<p>A query can be used to see if a particular row is in a table.  Type
+this to see if &lsquo;<samp class="samp">john</samp>&rsquo; is the parent of &lsquo;<samp class="samp">douglas</samp>&rsquo;:
+</p>
+<div class="example">
+<pre class="example-preformatted">&gt; parent(john, douglas)?
+parent(john, douglas).
+</pre></div>
+
+<p>Type this to see if &lsquo;<samp class="samp">john</samp>&rsquo; is the parent of &lsquo;<samp class="samp">ebbon</samp>&rsquo;:
+</p>
+<div class="example">
+<pre class="example-preformatted">&gt; parent(john, ebbon)?
+</pre></div>
+
+<p>The query produced no results because &lsquo;<samp class="samp">john</samp>&rsquo; is not the parent of
+&lsquo;<samp class="samp">ebbon</samp>&rsquo;.  Let&rsquo;s add more rows.
+</p>
+<div class="example">
+<pre class="example-preformatted">&gt; parent(bob, john).
+&gt; parent(ebbon, bob).
+</pre></div>
+
+<p>Type the following to list all rows in the &lsquo;<samp class="samp">parent</samp>&rsquo; table:
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">&gt; parent(A, B)?
+parent(john, douglas).
+parent(bob, john).
+parent(ebbon, bob).
+</pre></div></div>
+
+<p>Type the following to list all the children of &lsquo;<samp class="samp">john</samp>&rsquo;:
+</p>
+<div class="example">
+<pre class="example-preformatted">&gt; parent(john, B)?
+parent(john, douglas).
+</pre></div>
+
+<a class="index-entry-id" id="index-variable"></a>
+<p>A term that begins with a capital letter is a logical <em class="dfn">variable</em>.
+When producing a set of answers, the Datalog interpreter lists all
+rows that match the query when each variable in the query is
+substituted for a constant.  The following example produces no
+answers, as there are no substitutions for the variable &lsquo;<samp class="samp">A</samp>&rsquo; that
+produce a fact in the database.  This is because no one is the parent
+of oneself.
+</p>
+<div class="example">
+<pre class="example-preformatted">&gt; parent(A, A)?
+</pre></div>
+
+<a class="index-entry-id" id="index-rule_002c-example"></a>
+<p>A deductive database can use rules of inference to derive new facts.
+Consider the following rule:
+</p>
+<div class="example">
+<pre class="example-preformatted">&gt; ancestor(A, B) :- parent(A, B).
+</pre></div>
+
+<p>The rule says that if <var class="var">A</var> is the parent of <var class="var">B</var>, then <var class="var">A</var>
+is an ancestor of <var class="var">B</var>.  The other rule defining an ancestor says
+that if <var class="var">A</var> is the parent of <var class="var">C</var>, <var class="var">C</var> is an ancestor of
+<var class="var">B</var>, then <var class="var">A</var> is an ancestor of <var class="var">B</var>.
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">&gt; ancestor(A, B) :- \
+&gt;&gt;   parent(A, C),  \
+&gt;&gt;   ancestor(C, B).
+</pre></div></div>
+
+<a class="index-entry-id" id="index-continuation-line_002c-interpreter"></a>
+<p>In the interpreter, a line can be continued by ending it with the
+backslash character.
+</p>
+<p>Rules are used to answer queries just as is done for facts.
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">&gt; ancestor(A, B)?
+ancestor(ebbon, bob).
+ancestor(ebbon, douglas).
+ancestor(bob, john).
+ancestor(john, douglas).
+ancestor(ebbon, john).
+ancestor(bob, douglas).
+&gt; ancestor(X,john)?
+ancestor(bob, john).
+ancestor(ebbon, john).
+</pre></div></div>
+
+<p>A fact or a rule can be retracted from the database using tilde
+syntax:
+</p>
+<a class="index-entry-id" id="index-retraction_002c-example"></a>
+<div class="example">
+<div class="group"><pre class="example-preformatted">&gt; parent(bob, john)~
+&gt; parent(A,B)?
+parent(john, douglas).
+parent(ebbon, bob).
+&gt; ancestor(A,B)?
+ancestor(john, douglas).
+ancestor(ebbon, bob).
+</pre></div></div>
+
+<p>Unlike Prolog, the order in which clauses are asserted is irrelevant.
+All queries terminate, and every possible answer is derived.
+</p>
+<a class="index-entry-id" id="index-clause-order_002c-example"></a>
+<div class="example">
+<div class="group"><pre class="example-preformatted">&gt; q(X) :- p(X).
+&gt; q(a).
+&gt; p(X) :- q(X).
+&gt; q(X)?
+q(a).
+</pre></div></div>
+
+<hr>
+</div>
+<div class="chapter-level-extent" id="Interpreter">
+<div class="nav-panel">
+<p>
+Next: <a href="#Primitives" accesskey="n" rel="next">Primitive Predicates</a>, Previous: <a href="#Tutorial" accesskey="p" rel="prev">Tutorial</a>, Up: <a href="#Top" accesskey="u" rel="up">Contents</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<h2 class="chapter" id="Interpreter-1"><span>3 Interpreter<a class="copiable-link" href="#Interpreter-1"> &para;</a></span></h2>
+
+<p>The <code class="command">datalog</code> program provides access to a deductive database
+in both interactive or batch mode.  In batch mode, the program reads a
+Datalog program, prints the answers to its query, and then exits.  In
+interactive mode, the program treats each line of text it reads as a
+Datalog program, prints the answer to its query, and then prompts for
+more input.
+</p>
+<p>The <code class="command">datalog</code> interpreter accepts the following options:
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">$ datalog -h
+Usage: datalog [options] [file]
+Options:
+  -o file -- output to file (default is standard output)
+  -i      -- enter interactive mode after loading file
+  -l file -- load extensions written in Lua
+  -t      -- print output as tab separated values
+  -v      -- print version information
+  -h      -- print this message
+Use - as a file name to specify standard input
+</pre></div></div>
+
+<a class="index-entry-id" id="index-file-loading_002c-interpreter"></a>
+<a class="index-entry-id" id="index-equals-sign_002c-interpreter"></a>
+<a class="index-entry-id" id="index-continuation-line_002c-interpreter-1"></a>
+<p>When in interactive mode, if the first character of a line of input is
+the equals sign, the remaining text on the line is used as the name of
+a file that is loaded into the interpreter.  An incomplete line of
+text can be continued by ending the line with the backslash character.
+</p>
+<hr>
+</div>
+<div class="chapter-level-extent" id="Primitives">
+<div class="nav-panel">
+<p>
+Next: <a href="#Syntax" accesskey="n" rel="next">Syntax</a>, Previous: <a href="#Interpreter" accesskey="p" rel="prev">Interpreter</a>, Up: <a href="#Top" accesskey="u" rel="up">Contents</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<h2 class="chapter" id="Primitive-Predicates"><span>4 Primitive Predicates<a class="copiable-link" href="#Primitive-Predicates"> &para;</a></span></h2>
+
+<a class="index-entry-id" id="index-equals-sign_002c-primitive-predicate"></a>
+<p>The interpreter provides an equality predicate with infix notation.
+Two terms are equal if both terms are the same constant, or one is a
+constant and the other is a variable.
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">&gt; 1 = 2?
+&gt; 1 = 1?
+1 = 1.
+&gt; X = 1?
+1 = 1.
+&gt; X = X?
+</pre></div></div>
+
+<hr>
+</div>
+<div class="chapter-level-extent" id="Syntax">
+<div class="nav-panel">
+<p>
+Next: <a href="#Import_002fExport" accesskey="n" rel="next">Import/Export</a>, Previous: <a href="#Primitives" accesskey="p" rel="prev">Primitive Predicates</a>, Up: <a href="#Top" accesskey="u" rel="up">Contents</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<h2 class="chapter" id="Syntax-1"><span>5 Syntax<a class="copiable-link" href="#Syntax-1"> &para;</a></span></h2>
+
+<a class="index-entry-id" id="index-comment-syntax"></a>
+<a class="index-entry-id" id="index-whitespace"></a>
+<p>In Datalog input, whitespace characters are ignored except when they
+separate adjacent tokens or when they occur in strings.  Comments are
+also considered to be whitespace.  The character &lsquo;<samp class="samp">%</samp>&rsquo; introduces a
+comment, which extends to the next line break.  Comments do not occur
+inside strings.
+</p>
+<a class="index-entry-id" id="index-token-classes"></a>
+<a class="index-entry-id" id="index-punctuations_002c-token-class"></a>
+<p>The characters in Datalog input are collected into tokens according to
+the rules that follow.  There are four classes of tokens:
+punctuations, variables, identifiers, and strings.  The punctuation
+tokens are: &lsquo;<samp class="samp">(</samp>&rsquo;, &lsquo;<samp class="samp">,</samp>&rsquo;, &lsquo;<samp class="samp">)</samp>&rsquo;, &lsquo;<samp class="samp">=</samp>&rsquo;, &lsquo;<samp class="samp">:-</samp>&rsquo;,
+&lsquo;<samp class="samp">.</samp>&rsquo;, &lsquo;<samp class="samp">~</samp>&rsquo;, &lsquo;<samp class="samp">?</samp>&rsquo;, and &lsquo;<samp class="samp">&quot;</samp>&rsquo;.
+</p>
+<a class="index-entry-id" id="index-variables_002c-token-class"></a>
+<p>A variable is a sequence of Latin capital and small letters, digits,
+and the underscore character.  A variable must begin with a Latin
+capital letter.
+</p>
+<a class="index-entry-id" id="index-identifiers_002c-token-class"></a>
+<p>An identifier is a sequence of printing characters that does not
+contain any of the following characters: &lsquo;<samp class="samp">(</samp>&rsquo;, &lsquo;<samp class="samp">,</samp>&rsquo;, &lsquo;<samp class="samp">)</samp>&rsquo;,
+&lsquo;<samp class="samp">=</samp>&rsquo;, &lsquo;<samp class="samp">:</samp>&rsquo;, &lsquo;<samp class="samp">.</samp>&rsquo;, &lsquo;<samp class="samp">~</samp>&rsquo;, &lsquo;<samp class="samp">?</samp>&rsquo;, &lsquo;<samp class="samp">&quot;</samp>&rsquo;, &lsquo;<samp class="samp">%</samp>&rsquo;,
+and space.  An identifier must not begin with a Latin capital letter.
+Note that the characters that start punctuation are forbidden in
+identifiers, but the hyphen character is allowed.
+</p>
+<a class="index-entry-id" id="index-strings_002c-token-class"></a>
+<p>A string is a sequence of characters enclosed in double quotes.
+Characters other than double quote, newline, and backslash can be
+directly included in a string.  The remaining characters can be
+specified using escape characters, &lsquo;<samp class="samp">\&quot;</samp>&rsquo;, &lsquo;<samp class="samp">\n</samp>&rsquo;, and &lsquo;<samp class="samp">\\</samp>&rsquo;
+respectively.
+</p>
+<p>Other escape characters can be used to improve the readability of the
+input.  If a string is too long to fit conveniently on one line, all
+but the final line containing the string can be ended with a backslash
+character, and each backslash newline pair is ignored.  The character
+escape codes from the C programming language are allowed&mdash;&lsquo;<samp class="samp">\a</samp>&rsquo;,
+&lsquo;<samp class="samp">\b</samp>&rsquo;, &lsquo;<samp class="samp">\f</samp>&rsquo;, &lsquo;<samp class="samp">\n</samp>&rsquo;, &lsquo;<samp class="samp">\r</samp>&rsquo;, &lsquo;<samp class="samp">\t</samp>&rsquo;, &lsquo;<samp class="samp">\v</samp>&rsquo;,
+&lsquo;<samp class="samp">\'</samp>&rsquo;, and &lsquo;<samp class="samp">\?</samp>&rsquo;.  The numeric escape codes consist of one,
+two, or three octal digits.  Thus the ASCII character newline is
+&lsquo;<samp class="samp">\012</samp>&rsquo;, and zero is &lsquo;<samp class="samp">\000</samp>&rsquo;.  A printed Datalog string is
+also a string constant in C.
+</p>
+<ul class="mini-toc">
+<li><a href="#Literals" accesskey="1">Literals</a></li>
+<li><a href="#Clauses" accesskey="2">Clauses</a></li>
+<li><a href="#Programs" accesskey="3">Programs</a></li>
+</ul>
+<div class="section-level-extent" id="Literals">
+<h3 class="section"><span>5.1 Literals<a class="copiable-link" href="#Literals"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-literal"></a>
+
+<a class="index-entry-id" id="index-atomic-formula"></a>
+<a class="index-entry-id" id="index-predicate-symbol"></a>
+<a class="index-entry-id" id="index-constant"></a>
+<p>A <em class="dfn">literal</em>, is a predicate symbol followed by an optional
+parenthesized list of comma separated terms.  A <em class="dfn">predicate symbol</em>
+is either an identifier or a string.  A term is either a variable or a
+constant.  As with predicate symbols, a <em class="dfn">constant</em> is either an
+identifier or a string.  The following are literals:
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">parent(john, douglas)
+zero-arity-literal
+aBcD(-0, &quot;\n\377&quot;)
+&quot;=&quot;(3,3)
+&quot;&quot;(-0-0-0,&amp;&amp;&amp;,***,&quot;\0&quot;)
+</pre></div></div>
+
+</div>
+<div class="section-level-extent" id="Clauses">
+<h3 class="section"><span>5.2 Clauses<a class="copiable-link" href="#Clauses"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-clause"></a>
+
+<a class="index-entry-id" id="index-fact"></a>
+<a class="index-entry-id" id="index-rule"></a>
+<a class="index-entry-id" id="index-head"></a>
+<a class="index-entry-id" id="index-body"></a>
+<a class="index-entry-id" id="index-safe"></a>
+<p>A <em class="dfn">clause</em> is a <em class="dfn">head</em> literal followed by an optional body.
+A <em class="dfn">body</em> is a comma separated list of literals.  A clause without
+a body is called a <em class="dfn">fact</em>, and a <em class="dfn">rule</em> when it has one.  The
+punctuation &lsquo;<samp class="samp">:-</samp>&rsquo; separates the head of a rule from its body.  A
+clause is <em class="dfn">safe</em> if every variable in its head occurs in some
+literal in its body.  The following are safe clauses:
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">parent(john, douglas)
+ancestor(A, B) :-
+    parent(A, B)
+ancestor(A, B) :-
+    parent(A, C),
+    ancestor(C, B)
+</pre></div></div>
+
+</div>
+<div class="section-level-extent" id="Programs">
+<h3 class="section"><span>5.3 Programs<a class="copiable-link" href="#Programs"> &para;</a></span></h3>
+<a class="index-entry-id" id="index-program"></a>
+
+<a class="index-entry-id" id="index-assertion"></a>
+<a class="index-entry-id" id="index-retraction"></a>
+<a class="index-entry-id" id="index-reader"></a>
+<p>A Datalog reader consumes a Datalog program.  A <em class="dfn">program</em> is a
+sequence of zero or more statements, followed by an optional query.  A
+statement is an assertion or a retraction.  An <em class="dfn">assertion</em> is a
+clause followed by a period, and it adds the clause to the database if
+it is safe.  A <em class="dfn">retraction</em> is a clause followed by a tilde, and
+it removes the clause from the database.  A <em class="dfn">query</em> is a literal
+followed by a question mark.  The effect of reading a Datalog program
+is to modify the database as directed by its statements, and then to
+return the literal designated as the query.  If no query is specified,
+a reader returns a literal know to have no answers.  The following is
+a program:
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">edge(a, b). edge(b, c). edge(c, d). edge(d, a).
+path(X, Y) :- edge(X, Y).
+path(X, Y) :- edge(X, Z), path(Z, Y).
+path(X, Y)?
+</pre></div></div>
+
+<hr>
+</div>
+</div>
+<div class="chapter-level-extent" id="Import_002fExport">
+<div class="nav-panel">
+<p>
+Next: <a href="#Extensions" accesskey="n" rel="next">Extensions</a>, Previous: <a href="#Syntax" accesskey="p" rel="prev">Syntax</a>, Up: <a href="#Top" accesskey="u" rel="up">Contents</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<h2 class="chapter" id="Import_002fExport-1"><span>6 Import/Export<a class="copiable-link" href="#Import_002fExport-1"> &para;</a></span></h2>
+
+<a class="index-entry-id" id="index-tab-separated-values"></a>
+
+<p>Tab separated values is a simple text format for a database table.
+Each record in the table is one line of text.  Fields within the
+record are separated by the tab character.  The script below
+translates a file of tab separated values into Datalog syntax.
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">#! /bin/sh
+sed 's/\\/\\\\/g;s/&quot;/\\&quot;/g' -- &quot;$@&quot; | awk -F'\t' '
+{
+    if (NF == 0)
+        print &quot;data().&quot;
+    else {
+        printf(&quot;data(\&quot;%s\&quot;&quot;, $1)
+        for (i = 2; i &lt;= NF; i++)
+            printf(&quot;, \&quot;%s\&quot;&quot;, $i)
+        print &quot;).&quot;
+    }
+}'
+</pre></div></div>
+
+<p>The &lsquo;<samp class="samp">-t</samp>&rsquo; option causes the <code class="command">datalog</code> program to print
+answers to queries as tab separated values.  The following script
+removes quoting introduced by <code class="command">datalog</code>.
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">#! /bin/sh
+sed 's/&quot;\([^\t]*\)&quot;/\1/g' -- &quot;$@&quot; | awk '
+BEGIN { print &quot;BEGIN {&quot; }
+{ print &quot;print \&quot;&quot;$0&quot;\&quot;&quot; }
+END { print &quot;}&quot; }' | awk -f -
+</pre></div></div>
+
+<p>An example using <samp class="file">/etc/passwd</samp> as a database table follows.  The
+example shows a convoluted way of determining my home directory, but
+never the less demonstrates the integration of <code class="command">datalog</code> with
+other Unix tools.  In this example, assume the Datalog import script
+above has been placed into the file <code class="command">datalogimport</code>.
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">sed 's/:/\t/g' /etc/passwd \
+| datalogimport \
+| sed '
+$a\home(A,F):-data(A,B,C,D,E,F,G).\
+home(ramsdell,Dir)?' \
+| datalog -t - \
+| sed 's/\t/:/g'
+</pre></div></div>
+
+<p>The first <code class="command">sed</code> command converts <samp class="file">/etc/passwd</samp> to tab
+separated values, the second <code class="command">sed</code> command adds a rule and a
+query to the Datalog program, and the last <code class="command">sed</code> command
+converts the output to colon separated values.  On my machine, the
+above script produces <code class="code">ramsdell:/home/ramsdell</code>.
+</p>
+<p>Notice that input to <code class="command">datalog</code> is obtained from <code class="command">sed</code>
+using the &lsquo;<samp class="samp">-</samp>&rsquo; option rather than implicitly via standard input.
+Using the &lsquo;<samp class="samp">-</samp>&rsquo; option avoids prompt printing and other features of
+the interactive loop.
+</p>
+<hr>
+</div>
+<div class="chapter-level-extent" id="Extensions">
+<div class="nav-panel">
+<p>
+Next: <a href="#Stand_002dAlone" accesskey="n" rel="next">Stand-Alone</a>, Previous: <a href="#Import_002fExport" accesskey="p" rel="prev">Import/Export</a>, Up: <a href="#Top" accesskey="u" rel="up">Contents</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<h2 class="chapter" id="Extensions-1"><span>7 Extensions<a class="copiable-link" href="#Extensions-1"> &para;</a></span></h2>
+
+<a class="index-entry-id" id="index-Lua"></a>
+<p>Adding primitive predicates to the Datalog interpreter requires
+knowledge of its internals.  Much of the functionality of the
+interpreter is implemented using an embedded language called Lua,
+available at <a class="uref" href="http://www.lua.org">http://www.lua.org</a>.  Lua provides the needed
+infrastructure and a small footprint.  As an added bonus, the Lua
+language is a gem.  Knowledge of Lua is a prerequisite for what
+follows.
+</p>
+<p>The mechanics of adding primitives is straightforward.  Put your
+extensions in a file and load it using the &lsquo;<samp class="samp">-l</samp>&rsquo; option.
+The more difficult part is to decide what code should be
+loaded.
+</p>
+<p>The source file for the Datalog specific Lua code is installed in the
+Datalog package&rsquo;s data directory.  The path name of the source file
+typically ends with <samp class="file">share/datalog/datalog.lua</samp>.  The section
+with a comment containing the words &ldquo;PRIMITIVES&rdquo; is relevant.
+</p>
+<a class="index-entry-id" id="index-add_005fiter_005fprim_002c-datalog-function"></a>
+<a class="index-entry-id" id="index-datalog_002c-Lua-module"></a>
+<p>There is good support for the case in which a primitive can be defined
+in terms of a Lua iterator.  The file <samp class="file">datalog.lua</samp> defines the
+<code class="code">datalog</code> module, and it contains the function
+<code class="code">add_iter_prim</code>.  This function defines a primitive when given a
+predicate symbol, its arity, and an iterator.
+</p>
+<p>When given a literal, the iterator generates a sequences of answers.
+Each answer must be an array.  Each element in the array must be
+either a number or a string.  The length of the array must be equal to
+the arity of the predicate.
+</p>
+<p>What follows is a predicate defined by an iterator that produces one
+answer, and the answer has one element in it&mdash;the number three.
+</p>
+<a class="index-entry-id" id="index-three_002c-primitive"></a>
+<div class="example">
+<div class="group"><pre class="example-preformatted">local function all_threes(literal)
+  return function (s, v)
+    if v then
+      return nil
+    else
+      return {3}
+    end
+end
+datalog.add_iter_prim(&quot;three&quot;, 1, all_threes)
+</pre></div></div>
+
+<p>This primitive for addition shows how to ask if term <code class="code">t</code> is a
+constant via the construct <code class="code">t:is_const()</code>.
+</p>
+<a class="index-entry-id" id="index-add_002c-primitive"></a>
+<div class="example">
+<div class="group"><pre class="example-preformatted">local function add(literal)
+   return function(s, v)
+             if v then
+                return nil
+             else
+                local x = literal[1]
+                local y = literal[2]
+                local z = literal[3]
+                if y:is_const() and z:is_const() then
+                   return {y.id + z.id, y.id, z.id}
+                elseif x:is_const() and z:is_const() then
+                   return {x.id, x.id - z.id, z.id}
+                elseif x:is_const() and y:is_const() then
+                   return {x.id, y.id, x.id - y.id}
+                else
+                   return nil
+                end
+             end
+          end
+end
+datalog.add_iter_prim(&quot;add&quot;, 3, add)
+</pre></div></div>
+
+<p>The above primitive fails when given a non-numeric argument.  A more
+robust implementation of the predicate ensures that arguments are
+numbers before performing arithmetic.
+</p>
+<a class="index-entry-id" id="index-add_002c-primitive-with-type-checking"></a>
+<div class="example">
+<div class="group"><pre class="example-preformatted">local function add(literal)
+   return function(s, v)
+             if v then
+                return nil
+             else
+                local x = literal[1]
+                local y = literal[2]
+                local z = literal[3]
+                if y:is_const() and z:is_const() then
+                   local j = tonumber(y.id)
+                   local k = tonumber(z.id)
+                   if j and k then
+                      return {j + k, j, k}
+                   else
+                      return nil
+                   end
+                elseif x:is_const() and z:is_const() then
+                   local i = tonumber(x.id)
+                   local k = tonumber(z.id)
+                   if i and k then
+                      return {i, i - k, k}
+                   else
+                      return nil
+                   end
+                elseif x:is_const() and y:is_const() then
+                   local i = tonumber(x.id)
+                   local j = tonumber(y.id)
+                   if i and j then
+                      return {i, j, i - j}
+                   else
+                      return nil
+                   end
+                else
+                   return nil
+                end
+             end
+          end
+end
+</pre></div></div>
+
+<hr>
+</div>
+<div class="chapter-level-extent" id="Stand_002dAlone">
+<div class="nav-panel">
+<p>
+Next: <a href="#Library" accesskey="n" rel="next">Library</a>, Previous: <a href="#Extensions" accesskey="p" rel="prev">Extensions</a>, Up: <a href="#Top" accesskey="u" rel="up">Contents</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<h2 class="chapter" id="Stand_002dAlone-1"><span>8 Stand-Alone<a class="copiable-link" href="#Stand_002dAlone-1"> &para;</a></span></h2>
+
+<p>The Datalog module can be used by the stand-alone Lua interpreter.
+Load it with
+</p>
+<div class="example">
+<pre class="example-preformatted">require &quot;datalog&quot;
+</pre></div>
+
+<p>In the remainder of this chapter, a use of the Datalog module is
+demonstrated by translating the following Datalog program into Lua.
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">q(X) :- p(X).
+q(a).
+p(X) :- q(X).
+q(X)?
+</pre></div></div>
+
+<p>Abbreviations make the code more readable.
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">mv = datalog.make_var
+mc = datalog.make_const
+ml = datalog.make_literal
+mr = datalog.make_clause
+</pre></div></div>
+
+<p>A translation of <code class="code">q(X) :- p(X).</code>
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">do
+   local head = ml(&quot;q&quot;, {mv(&quot;X&quot;)})
+   local body = {ml(&quot;p&quot;, {mv(&quot;X&quot;)})}
+   datalog.assert(mr(head, body))
+end
+</pre></div></div>
+
+<p>A translation of <code class="code">q(a).</code>
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">do
+   local head = ml(&quot;q&quot;, {mc(&quot;a&quot;)})
+   datalog.assert(mr(head, {}))
+end
+</pre></div></div>
+
+<p>A translation of <code class="code">p(X) :- q(X).</code>
+</p>
+<div class="example">
+<div class="group"><pre class="example-preformatted">do
+   local head = ml(&quot;p&quot;, {mv(&quot;X&quot;)})
+   local body = {ml(&quot;q&quot;, {mv(&quot;X&quot;)})}
+   datalog.assert(mr(head, body))
+end
+</pre></div></div>
+
+<p>Given a literal, the <code class="code">ask</code> function uses it as a Datalog query
+and then prints the answers.
+</p>
+<a class="index-entry-id" id="index-ask_002c-Lua-function"></a>
+<div class="example">
+<div class="group"><pre class="example-preformatted">function ask(literal)
+   local ans = datalog.ask(literal)
+   if ans then
+      for i = 1,#ans do
+         io.write(ans.name)
+         if ans.arity &gt; 0 then
+            io.write(&quot;(&quot;)
+            io.write(ans[i][1])
+            for j = 2,ans.arity do
+               io.write(&quot;, &quot;)
+               io.write(ans[i][j])
+            end
+            io.write(&quot;).\n&quot;)
+         else
+            io.write(&quot;.\n&quot;)
+         end
+      end
+   end
+   return ans
+end
+</pre></div></div>
+
+<p>A translation of the query <code class="code">q(X)?</code>
+</p>
+<div class="example">
+<pre class="example-preformatted">ask(ml(&quot;q&quot;, {mv(&quot;X&quot;)}))
+</pre></div>
+
+<p>The answer printed.
+</p>
+<div class="example">
+<pre class="example-preformatted">q(a).
+</pre></div>
+
+<hr>
+</div>
+<div class="chapter-level-extent" id="Library">
+<div class="nav-panel">
+<p>
+Next: <a href="#Copying" accesskey="n" rel="next">Copying the Software</a>, Previous: <a href="#Stand_002dAlone" accesskey="p" rel="prev">Stand-Alone</a>, Up: <a href="#Top" accesskey="u" rel="up">Contents</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<h2 class="chapter" id="Library-1"><span>9 Library<a class="copiable-link" href="#Library-1"> &para;</a></span></h2>
+
+<p>The Datalog library makes the services provided by a Datalog
+interpreter available to C programs as a set of C functions and types.
+The interface is declared in the header file <samp class="file">datalog.h</samp>.  The
+header file contains useful comments.
+</p>
+<a class="index-entry-id" id="index-dl_005fdb_005ft_002c-library-type"></a>
+<p>The state of a Datalog interpreter is maintained by a dynamically
+allocated structure.  A pointer to this structure is passed as the
+first argument to every C function in the library, except to
+<code class="code">dl_open</code>, which allocates the structure, and returns it as a
+pointer of type <code class="code">dl_db_t</code>.
+</p>
+<a class="index-entry-id" id="index-dl_005fopen_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">dl_db_t dl_open(void);
+</pre></div>
+
+<p>If an error occurs, <code class="code">dl_open</code> returns the null pointer.  To
+release the resources associated with a Datalog interpreter, call
+<code class="code">dl_close</code>.
+</p>
+<a class="index-entry-id" id="index-dl_005fclose_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">void dl_close(dl_db_t);
+</pre></div>
+
+<p>The package name followed by the version number of the library is
+returned by <code class="code">dl_version</code>.
+</p>
+<a class="index-entry-id" id="index-dl_005fversion_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">const char* dl_version(void);
+</pre></div>
+
+<ul class="mini-toc">
+<li><a href="#Asserting" accesskey="1">Asserting</a></li>
+<li><a href="#Querying" accesskey="2">Querying</a></li>
+<li><a href="#Printing" accesskey="3">Printing</a></li>
+<li><a href="#Loading" accesskey="4">Loading</a></li>
+<li><a href="#Stack-Height-Adjusting" accesskey="5">Stack Height Adjusting</a></li>
+</ul>
+<div class="section-level-extent" id="Asserting">
+<h3 class="section"><span>9.1 Asserting<a class="copiable-link" href="#Asserting"> &para;</a></span></h3>
+
+<p>There are two ways to build literals and clauses, and assert and
+retract clauses.  This section describes the low-level interface.  It
+builds items by pushing each of its component on a stack, and then
+inserting it into the result.  The high-level Datalog program loader
+is described later.
+</p>
+<p>The remaining int returning functions in this interface return zero on
+success, unless othewise noted.  The maximum size of the stack
+manipulated by the functions is four, but implementations may provide
+a larger stack.
+</p>
+<ul class="mini-toc">
+<li><a href="#Strings" accesskey="1">Strings</a></li>
+<li><a href="#Literals-1" accesskey="2">Literals</a></li>
+<li><a href="#Clauses-1" accesskey="3">Clauses</a></li>
+<li><a href="#Actions" accesskey="4">Actions</a></li>
+</ul>
+<div class="subsection-level-extent" id="Strings">
+<h4 class="subsection"><span>9.1.1 Strings<a class="copiable-link" href="#Strings"> &para;</a></span></h4>
+
+<p>Push a string on the top of the stack.  The string may contain zeros.
+</p>
+<a class="index-entry-id" id="index-dl_005fpushlstring_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_pushlstring(dl_db_t db, const char *s, size_t n);
+</pre></div>
+
+<p>Push a string on the top of the stack.  The string must be zero
+terminated.
+</p>
+<a class="index-entry-id" id="index-dl_005fpushstring_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_pushstring(dl_db_t db, const char *s);
+</pre></div>
+
+<p>Concatenate two strings.  Pops two strings off the top of the stack
+and then pushes the concatenation of the two strings on the top of the
+stack.
+</p>
+<a class="index-entry-id" id="index-dl_005fconcat_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_concat(dl_db_t db);
+</pre></div>
+
+</div>
+<div class="subsection-level-extent" id="Literals-1">
+<h4 class="subsection"><span>9.1.2 Literals<a class="copiable-link" href="#Literals-1"> &para;</a></span></h4>
+
+<p>Start a literal.  Pushes an incompleted literal on the top of the
+stack.
+</p>
+<a class="index-entry-id" id="index-dl_005fpushliteral_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_pushliteral(dl_db_t db);
+</pre></div>
+
+<p>Make a string and then use this to add a predicate symbol to a
+literal.  Pops the string from stack.  For each literal, this must be
+done once, and can be done after some number of terms have been added.
+</p>
+<a class="index-entry-id" id="index-dl_005faddpred_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_addpred(dl_db_t db);
+</pre></div>
+
+<p>Make a string and then use this to add a variable to the list of terms
+of a literal.  Pops the string from stack.
+</p>
+<a class="index-entry-id" id="index-dl_005faddvar_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_addvar(dl_db_t db);
+</pre></div>
+
+<p>Make a string and then use this to add a constant to the list of terms
+of a literal.  Pops the string from stack.
+</p>
+<a class="index-entry-id" id="index-dl_005faddconst_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_addconst(dl_db_t db);
+</pre></div>
+
+<p>Finish making a literal after adding all terms and one predicate
+   symbol.  Leaves a completed literal on the top of the stack.
+</p>
+<a class="index-entry-id" id="index-dl_005fmakeliteral_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_makeliteral(dl_db_t db);
+</pre></div>
+
+</div>
+<div class="subsection-level-extent" id="Clauses-1">
+<h4 class="subsection"><span>9.1.3 Clauses<a class="copiable-link" href="#Clauses-1"> &para;</a></span></h4>
+
+<p>Make a literal and then use this to start a clause.  Pops a literal
+from the stack and leaves a newly created, incomplete clause on top of
+the stack.  The head of the clause is the literal.
+</p>
+<a class="index-entry-id" id="index-dl_005fpushhead_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_pushhead(dl_db_t db);
+</pre></div>
+
+<p>Make a literal and then use this to add it to the clause&rsquo;s body.  Pops
+a literal from the stack, and inserts it into the incomplete clause on
+the top of the stack.
+</p>
+<a class="index-entry-id" id="index-dl_005faddliteral_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_addliteral(dl_db_t db);
+</pre></div>
+
+<p>Finish the clause.  Leaves a completed clause on the top of the stack.
+</p>
+<a class="index-entry-id" id="index-dl_005fmakeclause_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_makeclause(dl_db_t db);
+</pre></div>
+
+</div>
+<div class="subsection-level-extent" id="Actions">
+<h4 class="subsection"><span>9.1.4 Actions<a class="copiable-link" href="#Actions"> &para;</a></span></h4>
+
+<p>Asserts the clause on the top of the stack.  The clause is added to
+the database and popped off the stack.  Returns -1 when a clause is
+not safe.
+</p>
+<a class="index-entry-id" id="index-dl_005fassert_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_assert(dl_db_t db);
+</pre></div>
+
+<p>Retracts the clause on the top of the stack.  The clause is removed
+from the database and popped off the stack.
+</p>
+<a class="index-entry-id" id="index-dl_005fretract_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_retract(dl_db_t db);
+</pre></div>
+
+</div>
+</div>
+<div class="section-level-extent" id="Querying">
+<h3 class="section"><span>9.2 Querying<a class="copiable-link" href="#Querying"> &para;</a></span></h3>
+
+<p>A literal on the stack can be used to query the database.
+</p>
+<a class="index-entry-id" id="index-dl_005fask_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_ask(dl_db_t db, dl_answers_t *a);
+</pre></div>
+
+<a class="index-entry-id" id="index-ground-instance-of-a-literal"></a>
+<a class="index-entry-id" id="index-literal_002c-ground-instance"></a>
+<p>This function asks for a list that contains all ground instances of a
+literal that are a logical consequence of the clauses stored in the
+database.  An instance of a literal is <em class="dfn">ground</em>, if it is the
+result of substituting some constant for each variable that occurs in
+the literal.  The function always pops the literal from the stack.  If
+some answers are found, they are returned by assigning to the <code class="code">a</code>
+parameter, a pointer to a freshly allocated list of answers of type
+<code class="code">dl_answers_t</code>.  The <code class="code">a</code> parameter is assigned the null
+pointer when there are errors or no answers.  The <code class="code">dl_ask</code>
+function returns a non-zero value on error.
+</p>
+<a class="index-entry-id" id="index-dl_005ffree_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">void dl_free(dl_answers_t a);
+</pre></div>
+
+<p>The <code class="code">dl_free</code> function frees the space associated with a list of
+answers.
+</p>
+<p>A description of the functions that access the components of a list of
+answers completes this section.
+</p>
+<a class="index-entry-id" id="index-dl_005fgetpred_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">char *dl_getpred(dl_answers_t a);
+</pre></div>
+
+<p>This function gets the predicate symbol associated with the answers.
+If the length of the predicate is <var class="var">n</var>, <var class="var">n</var> + 1 character
+locations are returned, and the last location is zero.  Other
+character locations in the predicate may be zero.  This function
+returns the null pointer if given it.
+</p>
+<a class="index-entry-id" id="index-dl_005fgetpredlen_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">size_t dl_getpredlen(dl_answers_t a);
+</pre></div>
+
+<p>This function gets the length of the predicate symbol associated with
+the answers.  This function returns zero if given the null pointer.
+</p>
+<a class="index-entry-id" id="index-dl_005fgetpredarity_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">size_t dl_getpredarity(dl_answers_t a);
+</pre></div>
+
+<p>This function gets the number of terms that makes up each answer.
+This number is called the predicate&rsquo;s arity.  It returns zero if given
+the null pointer.
+</p>
+<a class="index-entry-id" id="index-dl_005fgetconst_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">char *dl_getconst(dl_answers_t a, int i, int j);
+</pre></div>
+
+<p>This function gets the constant associated with term <code class="code">j</code> in
+answer <code class="code">i</code>.  Zero-based indexing is used throughout.  If the
+length of the constant is <var class="var">n</var>, <var class="var">n</var> + 1 character locations are
+returned, and the last location is zero.  Other character locations in
+the constant may be zero.  If there is no specified term or no answers
+at all, the null pointer is returned.
+</p>
+<a class="index-entry-id" id="index-dl_005fgetconstlen_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">size_t dl_getconstlen(dl_answers_t a, int i, int j);
+</pre></div>
+
+<p>This function gets the length of the constant associated with term
+<code class="code">j</code> in answer <code class="code">i</code>.  Zero-based indexing is used throughout.
+If there is no specified term or no answers at all, zero is returned.
+</p>
+</div>
+<div class="section-level-extent" id="Printing">
+<h3 class="section"><span>9.3 Printing<a class="copiable-link" href="#Printing"> &para;</a></span></h3>
+
+<p>The functions in this section provide support for printing using the
+loader&rsquo;s syntax for constants.
+</p>
+<a class="index-entry-id" id="index-dl_005fputlconst_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">void dl_putlconst(FILE *out, const char *s, size_t n);
+</pre></div>
+
+<p>Print a constant of a given length.  The function assumes the constant
+has <var class="var">n</var> + 1 character locations, and the last location is zero.
+Other character locations in the constant may be zero.
+</p>
+<a class="index-entry-id" id="index-dl_005fputconst_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">void dl_putconst(FILE *out, const char *s);
+</pre></div>
+
+<p>Print a zero terminated constant.
+</p>
+<a class="index-entry-id" id="index-dl_005fwidthoflconst_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">size_t dl_widthoflconst(const char *s, size_t n);
+</pre></div>
+
+<p>Determine the columns needed for a constant with a given length.  The
+function assumes the constant has <var class="var">n</var> + 1 character locations, and
+the last location is zero.  Other character locations in the constant
+may be zero.
+</p>
+<a class="index-entry-id" id="index-dl_005fwidthofconst_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">size_t dl_widthofconst(const char *s);
+</pre></div>
+
+<p>Determine the columns needed for a zero terminated constant.
+</p>
+</div>
+<div class="section-level-extent" id="Loading">
+<h3 class="section"><span>9.4 Loading<a class="copiable-link" href="#Loading"> &para;</a></span></h3>
+
+<p>The loader reads a Datalog program.  A program is a sequence of zero
+or more assertions or retractions, followed by an optional query
+expressed as a literal.  While reading, the loader performs the
+assertions and retractions requested by the program.  It finishes by
+pushing the query literal on the Datalog interpreter&rsquo;s stack.  If no
+query is specified, it pushes a literal known to have no answers.
+</p>
+<p>The loader obtains buffers containing characters by calling a
+function given to it of type <code class="code">dl_reader_t</code>.
+</p>
+<a class="index-entry-id" id="index-dl_005freader_005ft_002c-library-type"></a>
+<div class="example">
+<pre class="example-preformatted">typedef const char *(*dl_reader_t)(void *data, size_t *size);
+</pre></div>
+
+<p>When called by the loader, the reader is given the data supplied to
+the loader as its first argument.  If there is no more input
+available, the reader returns a null pointer, otherwise it assigns the
+size of the buffer to the <code class="code">size</code> parameter, and then returns a
+pointer to the buffer.
+</p>
+<p>The loader reports errors by calling a function given to it of type
+<code class="code">dl_loaderror_t</code>.
+</p>
+<a class="index-entry-id" id="index-dl_005floaderror_005ft_002c-library-type"></a>
+<div class="example">
+<pre class="example-preformatted">typedef void (*dl_loaderror_t)(void *data, int lineno,
+                               int colno, const char *msg);
+</pre></div>
+
+<p>When a loader error occurs, the loader calls this function with the
+data supplied to the loader, the location of the error as a line
+number and column number, and an error message.
+</p>
+<a class="index-entry-id" id="index-dl_005fload_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_load(dl_db_t database, dl_reader_t reader,
+            dl_loaderror_t loaderror, void *data);
+</pre></div>
+
+<p>This function loads a Datalog program.  It uses a reader to obtain a
+sequence of buffers that contain the program.  The load error reporter
+is called when the loader detects an error, and then a non-zero value
+is returned, otherwise, the loader returns zero.  The value in the
+data parameter is passed to both of the supplied functions whenever
+they are called.
+</p>
+<p>Upon success, the loader leaves a literal on the Datalog interpreter&rsquo;s
+stack.  To ignore this literal, call <code class="code">dl_pop</code>.
+</p>
+<a class="index-entry-id" id="index-dl_005fpop_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_pop(dl_db_t db);
+</pre></div>
+
+<p>The <code class="code">dl_loadbuffer</code> function loads a Datalog program contained in
+one buffer.
+</p>
+<a class="index-entry-id" id="index-dl_005floadbuffer_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_loadbuffer(dl_db_t database, const char *buffer,
+                  size_t size, dl_loaderror_t loaderror);
+</pre></div>
+
+</div>
+<div class="section-level-extent" id="Stack-Height-Adjusting">
+<h3 class="section"><span>9.5 Stack Height Adjusting<a class="copiable-link" href="#Stack-Height-Adjusting"> &para;</a></span></h3>
+
+<p>The height of the stack can be saved, and then later reset to the saved
+height.  This is useful when errors occur, as it makes it easy to
+remove pushed values without keeping track of how many values remain
+on the stack.
+</p>
+<p>The height of the stack is obtained with <code class="code">dl_mark</code>.  For this
+function, the return value does not indicate success or failure.
+</p>
+<a class="index-entry-id" id="index-dl_005fmark_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_mark(dl_db_t db);
+</pre></div>
+
+<p>The height of the stack is reset to a value returned by <code class="code">dl_mark</code>
+using <code class="code">dl_reset</code>.
+</p>
+<a class="index-entry-id" id="index-dl_005freset_002c-library-function"></a>
+<div class="example">
+<pre class="example-preformatted">int dl_reset(dl_db_t db, int m);
+</pre></div>
+
+<hr>
+</div>
+</div>
+<div class="appendix-level-extent" id="Copying">
+<div class="nav-panel">
+<p>
+Next: <a href="#Index" accesskey="n" rel="next">Index</a>, Previous: <a href="#Library" accesskey="p" rel="prev">Library</a>, Up: <a href="#Top" accesskey="u" rel="up">Contents</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<h2 class="appendix" id="Copying-the-Software"><span>Appendix A Copying the Software<a class="copiable-link" href="#Copying-the-Software"> &para;</a></span></h2>
+
+<p>The software described by this manual is covered by the terms of the
+GNU Lesser General Public License as published by the Free Software
+Foundation; either version 2 of the License, or (at your option) any
+later version.  The terms are contained in the file <samp class="file">COPYING.LIB</samp>
+in the source distribution of the software, or at
+<a class="uref" href="http://www.gnu.org/licenses/lgpl.txt">http://www.gnu.org/licenses/lgpl.txt</a>.
+</p>
+
+<hr>
+</div>
+<div class="unnumbered-level-extent" id="Index">
+<div class="nav-panel">
+<p>
+Previous: <a href="#Copying" accesskey="p" rel="prev">Copying the Software</a>, Up: <a href="#Top" accesskey="u" rel="up">Contents</a> &nbsp; [<a href="#Index" title="Index" rel="index">Index</a>]</p>
+</div>
+<h2 class="unnumbered" id="Index-1"><span>Index<a class="copiable-link" href="#Index-1"> &para;</a></span></h2>
+
+<div class="printindex cp-printindex">
+<table class="cp-letters-header-printindex"><tr><th>Jump to: &nbsp; </th><td><a class="summary-letter-printindex" href="#Index_cp_letter-A"><b>A</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-B"><b>B</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-C"><b>C</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-D"><b>D</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-E"><b>E</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-F"><b>F</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-G"><b>G</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-H"><b>H</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-I"><b>I</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-L"><b>L</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-P"><b>P</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-Q"><b>Q</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-R"><b>R</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-S"><b>S</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-T"><b>T</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-V"><b>V</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-W"><b>W</b></a>
+ &nbsp; 
+</td></tr></table>
+<table class="cp-entries-printindex">
+<tr><td></td><th class="entries-header-printindex">Index Entry</th><th class="sections-header-printindex">Section</th></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-A">A</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-add_005fiter_005fprim_002c-datalog-function"><code class="code">add_iter_prim</code>, <code class="code">datalog</code> function</a></td><td class="printindex-index-section"><a href="#Extensions">Extensions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-add_002c-primitive"><code class="code">add</code>, primitive</a></td><td class="printindex-index-section"><a href="#Extensions">Extensions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-add_002c-primitive-with-type-checking"><code class="code">add</code>, primitive with type checking</a></td><td class="printindex-index-section"><a href="#Extensions">Extensions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-ask_002c-Lua-function"><code class="code">ask</code>, Lua function</a></td><td class="printindex-index-section"><a href="#Stand_002dAlone">Stand-Alone</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-assertion">assertion</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-atomic-formula">atomic formula</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-B">B</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-body">body</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-C">C</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-clause">clause</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-clause-order_002c-example">clause order, example</a></td><td class="printindex-index-section"><a href="#Tutorial">Tutorial</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-comment-syntax">comment syntax</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-constant">constant</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-continuation-line_002c-interpreter">continuation line, interpreter</a></td><td class="printindex-index-section"><a href="#Tutorial">Tutorial</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-continuation-line_002c-interpreter-1">continuation line, interpreter</a></td><td class="printindex-index-section"><a href="#Interpreter">Interpreter</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-D">D</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-datalog_002c-Lua-module"><code class="code">datalog</code>, Lua module</a></td><td class="printindex-index-section"><a href="#Extensions">Extensions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005faddconst_002c-library-function"><code class="code">dl_addconst</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005faddliteral_002c-library-function"><code class="code">dl_addliteral</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005faddpred_002c-library-function"><code class="code">dl_addpred</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005faddvar_002c-library-function"><code class="code">dl_addvar</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fask_002c-library-function"><code class="code">dl_ask</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fassert_002c-library-function"><code class="code">dl_assert</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fclose_002c-library-function"><code class="code">dl_close</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fconcat_002c-library-function"><code class="code">dl_concat</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fdb_005ft_002c-library-type"><code class="code">dl_db_t</code>, library type</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005ffree_002c-library-function"><code class="code">dl_free</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fgetconst_002c-library-function"><code class="code">dl_getconst</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fgetconstlen_002c-library-function"><code class="code">dl_getconstlen</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fgetpred_002c-library-function"><code class="code">dl_getpred</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fgetpredarity_002c-library-function"><code class="code">dl_getpredarity</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fgetpredlen_002c-library-function"><code class="code">dl_getpredlen</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fload_002c-library-function"><code class="code">dl_load</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005floadbuffer_002c-library-function"><code class="code">dl_loadbuffer</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005floaderror_005ft_002c-library-type"><code class="code">dl_loaderror_t</code>, library type</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fmakeclause_002c-library-function"><code class="code">dl_makeclause</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fmakeliteral_002c-library-function"><code class="code">dl_makeliteral</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fmark_002c-library-function"><code class="code">dl_mark</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fopen_002c-library-function"><code class="code">dl_open</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fpop_002c-library-function"><code class="code">dl_pop</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fpushhead_002c-library-function"><code class="code">dl_pushhead</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fpushliteral_002c-library-function"><code class="code">dl_pushliteral</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fpushlstring_002c-library-function"><code class="code">dl_pushlstring</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fpushstring_002c-library-function"><code class="code">dl_pushstring</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fputconst_002c-library-function"><code class="code">dl_putconst</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fputlconst_002c-library-function"><code class="code">dl_putlconst</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005freader_005ft_002c-library-type"><code class="code">dl_reader_t</code>, library type</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005freset_002c-library-function"><code class="code">dl_reset</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fretract_002c-library-function"><code class="code">dl_retract</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fversion_002c-library-function"><code class="code">dl_version</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fwidthofconst_002c-library-function"><code class="code">dl_widthofconst</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-dl_005fwidthoflconst_002c-library-function"><code class="code">dl_widthoflconst</code>, library function</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-E">E</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-equals-sign_002c-interpreter">equals sign, interpreter</a></td><td class="printindex-index-section"><a href="#Interpreter">Interpreter</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-equals-sign_002c-primitive-predicate">equals sign, primitive predicate</a></td><td class="printindex-index-section"><a href="#Primitives">Primitives</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-F">F</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-fact">fact</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-fact_002c-example">fact, example</a></td><td class="printindex-index-section"><a href="#Tutorial">Tutorial</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-file-loading_002c-interpreter">file loading, interpreter</a></td><td class="printindex-index-section"><a href="#Interpreter">Interpreter</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-G">G</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-ground-instance-of-a-literal">ground instance of a literal</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-H">H</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-head">head</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-I">I</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-identifiers_002c-token-class">identifiers, token class</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-L">L</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-literal">literal</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-literal_002c-ground-instance">literal, ground instance</a></td><td class="printindex-index-section"><a href="#Library">Library</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-Lua">Lua</a></td><td class="printindex-index-section"><a href="#Extensions">Extensions</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-P">P</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-predicate-symbol">predicate symbol</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-program">program</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-punctuations_002c-token-class">punctuations, token class</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-Q">Q</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-query">query</a></td><td class="printindex-index-section"><a href="#Tutorial">Tutorial</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-R">R</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-reader">reader</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-retraction">retraction</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-retraction_002c-example">retraction, example</a></td><td class="printindex-index-section"><a href="#Tutorial">Tutorial</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-rule">rule</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-rule_002c-example">rule, example</a></td><td class="printindex-index-section"><a href="#Tutorial">Tutorial</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-S">S</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-safe">safe</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-strings_002c-token-class">strings, token class</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-T">T</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-tab-separated-values">tab separated values</a></td><td class="printindex-index-section"><a href="#Import_002fExport">Import/Export</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-term">term</a></td><td class="printindex-index-section"><a href="#Tutorial">Tutorial</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-three_002c-primitive"><code class="code">three</code>, primitive</a></td><td class="printindex-index-section"><a href="#Extensions">Extensions</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-token-classes">token classes</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-V">V</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-variable">variable</a></td><td class="printindex-index-section"><a href="#Tutorial">Tutorial</a></td></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-variables_002c-token-class">variables, token class</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+<tr><th id="Index_cp_letter-W">W</th></tr>
+<tr><td></td><td class="printindex-index-entry"><a href="#index-whitespace">whitespace</a></td><td class="printindex-index-section"><a href="#Syntax">Syntax</a></td></tr>
+<tr><td colspan="3"><hr></td></tr>
+</table>
+<table class="cp-letters-footer-printindex"><tr><th>Jump to: &nbsp; </th><td><a class="summary-letter-printindex" href="#Index_cp_letter-A"><b>A</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-B"><b>B</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-C"><b>C</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-D"><b>D</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-E"><b>E</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-F"><b>F</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-G"><b>G</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-H"><b>H</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-I"><b>I</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-L"><b>L</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-P"><b>P</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-Q"><b>Q</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-R"><b>R</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-S"><b>S</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-T"><b>T</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-V"><b>V</b></a>
+ &nbsp; 
+<a class="summary-letter-printindex" href="#Index_cp_letter-W"><b>W</b></a>
+ &nbsp; 
+</td></tr></table>
+</div>
+
+</div>
+</div>
+
+
+
+</body>
+</html>
